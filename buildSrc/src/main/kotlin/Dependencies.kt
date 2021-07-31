@@ -14,7 +14,7 @@ object Application {
 
 object Versions {
     object Essential {
-        const val Kotlin = "1.5.30-M1"
+        const val Kotlin = "1.5.10"
         const val CoreKtx = "1.6.0"
         const val Coroutines = "1.5.1"
         const val Gradle = "7.1.0-alpha05"
@@ -32,10 +32,6 @@ object Versions {
     object Network {
         const val OkHttp = "4.9.1"
         const val Retrofit = "2.9.0"
-    }
-
-    object Jetpack {
-        const val Room = "2.3.0"
     }
 
     object Hilt {
@@ -78,11 +74,6 @@ object Dependencies {
         "com.balsikandar.android:crashreporter:${Versions.Util.CrashReporter}"
     )
 
-    val room = listOf(
-        "androidx.room:room-ktx:${Versions.Jetpack.Room}",
-        "androidx.room:room-runtime:${Versions.Jetpack.Room}"
-    )
-
     val hilt = listOf(
         "com.google.dagger:hilt-android:${Versions.Hilt.Master}",
     )
@@ -97,7 +88,6 @@ object Dependencies {
     )
 
     val compiler = listOf(
-        "androidx.room:room-compiler:${Versions.Jetpack.Room}",
         "com.google.dagger:hilt-android-compiler:${Versions.Hilt.Master}"
     )
 }

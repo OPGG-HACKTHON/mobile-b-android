@@ -17,14 +17,6 @@ android {
         multiDexEnabled = true
         setProperty("archivesBaseName", "$versionName ($versionCode)")
 
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
-
-            correctErrorTypes = true
-        }
-
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -77,6 +69,5 @@ dependencies {
     Dependencies.util.forEach(::implementation)
     Dependencies.compose.forEach(::implementation)
     Dependencies.hilt.forEach(::implementation)
-    Dependencies.room.forEach(::implementation)
     Dependencies.compiler.forEach(::kapt)
 }
