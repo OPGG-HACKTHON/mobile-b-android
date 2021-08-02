@@ -19,5 +19,5 @@
 - Dagger-Hilt for DI
 - Coroutines/Flow for asynchronous
 - Retrofit/OkHttp for networking
-- Repository + Marker Interface, MVVM pattern for Design Pattern
-- Apply clean-architecture (가능하면?)
+- Repository + Marker Interface, MVVM for Design Pattern
+- Clean-architecture (가능하면?)
