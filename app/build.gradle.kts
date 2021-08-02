@@ -66,7 +66,6 @@ dependencies {
     Dependencies.essential.forEach(::implementation)
     Dependencies.network.forEach(::implementation)
     Dependencies.ui.forEach(::implementation)
-    Dependencies.util.forEach(::implementation)
     Dependencies.compose.forEach(::implementation)
     Dependencies.hilt.forEach(::implementation)
     Dependencies.compiler.forEach(::kapt)

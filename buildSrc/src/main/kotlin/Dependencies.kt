@@ -22,10 +22,10 @@ object Versions {
 
     object Ui {
         const val ConstraintLayout = "1.0.0-beta01"
+        const val Material = "1.4.0"
     }
 
     object Util {
-        const val CrashReporter = "1.1.0"
         const val CheckDependencyUpdates = "1.4.1"
     }
 
@@ -68,10 +68,7 @@ object Dependencies {
 
     val ui = listOf(
         "androidx.constraintlayout:constraintlayout-compose:${Versions.Ui.ConstraintLayout}",
-    )
-
-    val util = listOf(
-        "com.balsikandar.android:crashreporter:${Versions.Util.CrashReporter}"
+        "com.google.android.material:material:${Versions.Ui.Material}"
     )
 
     val hilt = listOf(
