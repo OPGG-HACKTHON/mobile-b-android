@@ -20,4 +20,4 @@
 - Coroutines/Flow for asynchronous
 - Retrofit/OkHttp for networking
 - Repository + Marker Interface, MVVM for Design Pattern
-- Clean-architecture (가능하면?)
+- Clean-architecture
