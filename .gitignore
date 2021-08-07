@@ -1,14 +1,13 @@
 *.iml
 .gradle
-/local.properties
 /.idea
 .DS_Store
-/app/build
+/domain/build
+/data/build
+/presentation/build
 /build
 /captures
 .externalNativeBuild
 .cxx
 local.properties
-
-# Project exclude paths
 /buildSrc/build/

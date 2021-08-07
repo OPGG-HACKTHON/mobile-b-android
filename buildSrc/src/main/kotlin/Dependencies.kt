@@ -29,6 +29,10 @@ object Versions {
         const val CheckDependencyUpdates = "1.4.1"
     }
 
+    object NetworkUtil {
+        const val Gson = "2.8.7"
+    }
+
     object Network {
         const val OkHttp = "4.9.1"
         const val Retrofit = "2.9.0"
@@ -56,8 +60,13 @@ object Dependencies {
 
     val network = listOf(
         "com.squareup.okhttp3:okhttp:${Versions.Network.OkHttp}",
-        "com.squareup.retrofit2:retrofit:${Versions.Network.Retrofit}",
-        "com.squareup.okhttp3:logging-interceptor:${Versions.Network.OkHttp}"
+        "com.squareup.retrofit2:retrofit:${Versions.Network.Retrofit}"
+    )
+
+    val networkutil = listOf(
+        "com.google.code.gson:gson:${Versions.NetworkUtil.Gson}",
+        "com.squareup.okhttp3:logging-interceptor:${Versions.Network.OkHttp}",
+        "com.squareup.retrofit2:converter-gson:${Versions.Network.Retrofit}",
     )
 
     val essential = listOf(
