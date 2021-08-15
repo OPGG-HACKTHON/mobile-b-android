@@ -136,8 +136,7 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_arrow_forward_24),
-                    contentDescription = null,
-                    tint = Color.White
+                    contentDescription = null
                 )
             }
         }
