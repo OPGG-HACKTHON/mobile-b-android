@@ -5,8 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
@@ -29,6 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import team.mobileb.opgg.R
 import team.mobileb.opgg.theme.LightGray
 import team.mobileb.opgg.theme.Orange
@@ -50,7 +52,9 @@ fun CreateRoom(window: Window, onStateChangeAction: () -> Unit) {
 @Composable
 private fun Header(modifier: Modifier) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(30.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -62,36 +66,78 @@ private fun Header(modifier: Modifier) {
 private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
     var linkField by remember { mutableStateOf(TextFieldValue()) }
 
-    Column(
+    ConstraintLayout(
         modifier = modifier
-            .clip(RoundedCornerShape(topStart = 30.dp))
+            .fillMaxSize()
+            .clip(RoomContentShape)
+            .background(Color.White)
             .padding(30.dp)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = stringResource(R.string.activity_room_link), color = Color.Black)
+        val (content, footer) = createRefs()
+
+        Column(
+            modifier = Modifier.constrainAs(content) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                top.linkTo(parent.top)
+                bottom.linkTo(footer.top, 15.dp)
+                width = Dimension.fillToConstraints
+            },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = stringResource(R.string.activity_room_link), color = Color.Black, fontSize = 18.sp)
             TextField(
                 value = linkField,
                 onValueChange = { linkField = it },
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = LightGray,
-                    disabledIndicatorColor = LightGray,
-                    focusedIndicatorColor = LightGray,
-                    unfocusedIndicatorColor = LightGray
+                    disabledIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = Color.Black
                 ),
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(15.dp),
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth()
             )
         }
-        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+        ConstraintLayout(
+            modifier = Modifier.constrainAs(footer) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
+                width = Dimension.fillToConstraints
+            }
+        ) {
+            val (label, fab) = createRefs()
+
             Text(
                 text = stringResource(R.string.activiry_room_create),
                 fontWeight = FontWeight.Bold,
-                fontSize = 15.sp,
-                modifier = Modifier.clickable { onStateChangeAction() }
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .clickable { onStateChangeAction() }
+                    .constrainAs(label) {
+                        start.linkTo(parent.start)
+                        end.linkTo(fab.start)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }
             )
-            FloatingActionButton(onClick = {}, backgroundColor = Orange) { // todo: onClick Action
+            FloatingActionButton(
+                modifier = Modifier.constrainAs(fab) {
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                },
+                onClick = {}, // todo: onClick Action
+                backgroundColor = Orange
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_arrow_forward_24),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = Color.White
                 )
             }
         }

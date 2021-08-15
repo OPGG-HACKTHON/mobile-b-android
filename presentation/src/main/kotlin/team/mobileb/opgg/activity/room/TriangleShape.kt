@@ -15,8 +15,8 @@ class TriangleShape : Shape {
     ): Outline {
         val trianglePath = Path().apply {
             moveTo(x = 0f, y = 0f)
+            lineTo(x = size.width, y = 0f)
             lineTo(x = size.width, y = size.height)
-            lineTo(x = 0f, y = size.height)
             close()
         }
         return Outline.Generic(path = trianglePath)
