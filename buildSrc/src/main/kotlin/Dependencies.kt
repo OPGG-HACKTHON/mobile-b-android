@@ -14,7 +14,7 @@ object Application {
 
 object Versions {
     object Essential {
-        const val Kotlin = "1.5.10"
+        const val Kotlin = "1.5.21"
         const val CoreKtx = "1.6.0"
         const val Coroutines = "1.5.1"
         const val Gradle = "7.1.0-alpha05"
@@ -23,6 +23,7 @@ object Versions {
     object Ui {
         const val ConstraintLayout = "1.0.0-beta01"
         const val Material = "1.4.0"
+        const val LandscapistCoil = "1.3.2"
     }
 
     object Util {
@@ -44,8 +45,8 @@ object Versions {
     }
 
     object Compose {
-        const val Master = "1.0.0"
-        const val Activity = "1.3.0"
+        const val Master = "1.0.1"
+        const val Activity = "1.3.1"
     }
 
     object Debug {
@@ -54,6 +55,10 @@ object Versions {
 }
 
 object Dependencies {
+    const val json = "com.google.code.gson:gson:${Versions.NetworkUtil.Gson}"
+    const val coil =
+        "com.github.skydoves:landscapist-coil:${Versions.Ui.LandscapistCoil}"
+
     val debug = listOf(
         "com.squareup.leakcanary:leakcanary-android:${Versions.Debug.LeakCanary}"
     )
@@ -64,7 +69,6 @@ object Dependencies {
     )
 
     val networkutil = listOf(
-        "com.google.code.gson:gson:${Versions.NetworkUtil.Gson}",
         "com.squareup.okhttp3:logging-interceptor:${Versions.Network.OkHttp}",
         "com.squareup.retrofit2:converter-gson:${Versions.Network.Retrofit}",
     )

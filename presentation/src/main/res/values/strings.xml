@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">GameWaitingService</string>
+    <string name="app_name">갔다올게!</string>
+    <string name="afk">자리 비움</string>
+    <string name="afk_description">곧 돌아올게\n갔다올게</string>
+    <string name="emoji_folded_hand">🙏</string>
+
+    <string name="activity_room_link">링크</string>
+    <string name="activiry_room_create">생성하기</string>
 </resources>

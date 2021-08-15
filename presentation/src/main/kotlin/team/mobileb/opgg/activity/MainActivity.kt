@@ -1,10 +1,12 @@
-package team.mobileb.opgg
+package team.mobileb.opgg.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import team.mobileb.opgg.theme.MaterialTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,6 +22,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun Main() {
-        Text(text = "Hello World!")
+        val text = remember { mutableStateOf("1") }
+        Text(text = text.value)
     }
 }

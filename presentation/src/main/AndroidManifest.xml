@@ -14,7 +14,7 @@
         android:theme="@style/Theme.GameWaitingService">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.room.RoomActivity"
             android:exported="true"
             android:label="@string/app_name">
 
