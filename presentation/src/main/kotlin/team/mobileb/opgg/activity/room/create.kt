@@ -5,10 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -72,6 +75,7 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
             .clip(RoomContentShape)
             .background(Color.White)
             .padding(30.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         val (content, footer) = createRefs()
 
@@ -85,7 +89,11 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
             },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = stringResource(R.string.activity_room_link), color = Color.Black, fontSize = 18.sp)
+            Text(
+                text = stringResource(R.string.activity_room_link),
+                color = Color.Black,
+                fontSize = 18.sp
+            )
             TextField(
                 value = linkField,
                 onValueChange = { linkField = it },
@@ -102,35 +110,23 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
                     .fillMaxWidth()
             )
         }
-        ConstraintLayout(
+        Row(
             modifier = Modifier.constrainAs(footer) {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 bottom.linkTo(parent.bottom)
                 width = Dimension.fillToConstraints
-            }
+            },
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            val (label, fab) = createRefs()
-
             Text(
                 text = stringResource(R.string.activiry_room_create),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                modifier = Modifier
-                    .clickable { onStateChangeAction() }
-                    .constrainAs(label) {
-                        start.linkTo(parent.start)
-                        end.linkTo(fab.start)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                    }
+                modifier = Modifier.clickable { onStateChangeAction() }
             )
             FloatingActionButton(
-                modifier = Modifier.constrainAs(fab) {
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                },
                 onClick = {}, // todo: onClick Action
                 backgroundColor = Orange
             ) {

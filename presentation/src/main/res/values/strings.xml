@@ -6,4 +6,5 @@
 
     <string name="activity_room_link">링크</string>
     <string name="activiry_room_create">생성하기</string>
+    <string name="activity_room_position">포지션</string>
 </resources>
