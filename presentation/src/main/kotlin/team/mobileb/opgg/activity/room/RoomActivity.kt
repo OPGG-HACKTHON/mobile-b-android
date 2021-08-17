@@ -33,10 +33,11 @@ class RoomActivity : ComponentActivity() {
     @Composable
     private fun Setup() {
         var state by remember { mutableStateOf<RoomState>(RoomState.Create) }
+
         Crossfade(state) { _state ->
             when (_state) {
                 RoomState.Join -> {
-                    JoinRoom()
+                    JoinRoom(window = window, onStateChangeAction = { state = RoomState.Create })
                 }
                 RoomState.Create -> {
                     CreateRoom(window = window, onStateChangeAction = { state = RoomState.Join })
