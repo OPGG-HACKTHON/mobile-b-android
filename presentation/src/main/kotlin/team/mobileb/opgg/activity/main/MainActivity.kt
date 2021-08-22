@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity() {
                     }
             )
             Image(
-                painter = painterResource(R.drawable.ic_chats_splash),
+                painter = painterResource(R.drawable.ic_baseline_chats_250),
                 contentDescription = null,
                 modifier = Modifier.constrainAs(image) {
                     top.linkTo(header.bottom)

@@ -3,27 +3,26 @@ package team.mobileb.opgg.theme
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-
-// todo: setup main color
-/*val colors = lightColors().copy(
-    primary = Color(0xFF6b1aa5),
-    primaryVariant = Color(0xFF380075),
-    secondary = Color(0xFF9e4dd7)
-)*/
 
 val Pink = Color(0xFFf94c83)
 val Blue = Color(0xFF587de5)
 val LightGray = Color(0xFFebebeb)
 val Gray = Color(0xFFcccccc)
+val HalfTransparentRed = Color(0x80FF0000)
+
+private val colors = lightColors().copy(
+    primary = Blue,
+    primaryVariant = Color(0xFF0b51b2),
+    secondary = Color(0xFF8facff)
+)
 
 @Composable
 fun MaterialTheme(content: @Composable () -> Unit) {
-    MaterialTheme {
-        content()
-    }
+    MaterialTheme(colors = colors, content = { content() })
 }
 
 @Composable
