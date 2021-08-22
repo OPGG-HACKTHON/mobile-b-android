@@ -43,7 +43,7 @@ import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
 
 @Composable
-fun JoinRoom(window: Window, onStateChangeAction: () -> Unit) {
+fun JoinRoom(window: Window, buttonAction: () -> Unit) {
     SystemUiController(window).setStatusBarColor(Blue)
     Column(
         modifier = Modifier
@@ -51,7 +51,7 @@ fun JoinRoom(window: Window, onStateChangeAction: () -> Unit) {
             .background(Blue)
     ) {
         Header(modifier = Modifier.weight(1f))
-        Content(modifier = Modifier.weight(2f), onStateChangeAction = onStateChangeAction)
+        Content(modifier = Modifier.weight(2f), onStateChangeAction = buttonAction)
     }
 }
 
@@ -85,7 +85,7 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.activity_room_link),
+            text = stringResource(R.string.activity_room_label_link),
             color = Color.Black,
             fontSize = 18.sp
         )
@@ -102,10 +102,11 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier
                 .padding(top = 10.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            singleLine = true
         )
         Text(
-            text = stringResource(R.string.activity_room_position),
+            text = stringResource(R.string.activity_room_label_position),
             color = Color.Black,
             fontSize = 18.sp
         )
@@ -143,7 +144,7 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.activiry_room_create),
+                text = stringResource(R.string.activity_room_label_join),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
