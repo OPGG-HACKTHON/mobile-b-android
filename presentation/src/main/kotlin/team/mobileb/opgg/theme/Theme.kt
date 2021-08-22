@@ -15,8 +15,7 @@ import androidx.compose.ui.unit.dp
 )*/
 
 val Pink = Color(0xFFf94c83)
-val Blue = Color(0xFF0b70fe)
-val LightBlue = Color(0xFF587de5)
+val Blue = Color(0xFF587de5)
 val LightGray = Color(0xFFebebeb)
 val Gray = Color(0xFFcccccc)
 

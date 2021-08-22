@@ -34,7 +34,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import team.mobileb.opgg.R
 import team.mobileb.opgg.activity.room.RoomActivity
 import team.mobileb.opgg.activity.room.RoomState
-import team.mobileb.opgg.theme.LightBlue
+import team.mobileb.opgg.theme.Blue
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .width(200.dp)
                     .height(150.dp)
-                    .background(color = LightBlue, shape = headerShape)
+                    .background(color = Blue, shape = headerShape)
                     .clip(headerShape)
                     .constrainAs(header) {
                         top.linkTo(parent.top, 50.dp)
@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .size(40.dp)
                     .clip(TriangleShape())
-                    .background(LightBlue)
+                    .background(Blue)
                     .constrainAs(headerTail) {
                         top.linkTo(header.bottom)
                         start.linkTo(header.start)
@@ -128,7 +128,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(1f),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = LightBlue),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Blue),
                     shape = RoundedCornerShape(topStart = 30.dp),
                     elevation = transparentButtonElevation()
                 ) {

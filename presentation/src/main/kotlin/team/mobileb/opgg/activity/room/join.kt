@@ -1,8 +1,8 @@
 package team.mobileb.opgg.activity.room
 
 import android.view.Window
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,6 +73,16 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
     val positionsList = listOf("정글", "미드", "서폿", "원딜", "탑", null).chunked(2)
     val positionButtonShape = RoundedCornerShape(10.dp)
     val positionButtonHeight = 50.dp
+    var selectedPosition by remember { mutableStateOf("") }
+
+    @Composable
+    fun positionButtonBackgroundColor(position: String) =
+        animateColorAsState(if (selectedPosition == position) Blue else Gray).value
+
+    @Composable
+    fun positionButtonTextColor(position: String) =
+        animateColorAsState(if (selectedPosition == position) Color.White else Color.Black).value
+
     var linkField by remember { mutableStateOf(TextFieldValue()) }
 
     Column(
@@ -118,15 +128,16 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
                 positions.forEach { position ->
                     if (position != null) {
                         Button(
-                            onClick = { /*TODO*/ },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Gray),
+                            onClick = { selectedPosition = position },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = positionButtonBackgroundColor(position)
+                            ),
                             modifier = Modifier
                                 .weight(1f)
-                                .height(positionButtonHeight)
-                                .clickable { /* todo */ },
+                                .height(positionButtonHeight),
                             shape = positionButtonShape
                         ) {
-                            Text(text = position, color = Color.Black)
+                            Text(text = position, color = positionButtonTextColor(position))
                         }
                     } else {
                         Spacer(
