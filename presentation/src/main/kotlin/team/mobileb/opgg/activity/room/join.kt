@@ -40,6 +40,7 @@ import team.mobileb.opgg.theme.Blue
 import team.mobileb.opgg.theme.Gray
 import team.mobileb.opgg.theme.LightGray
 import team.mobileb.opgg.theme.SystemUiController
+import team.mobileb.opgg.theme.transparentButtonElevation
 
 @Composable
 fun JoinRoom(window: Window, onStateChangeAction: () -> Unit) {
@@ -151,10 +152,7 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(backgroundColor = Blue),
                 shape = CircleShape,
                 modifier = Modifier.size(50.dp),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp
-                )
+                elevation = transparentButtonElevation()
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_arrow_forward_24),

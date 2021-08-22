@@ -7,4 +7,6 @@
     <string name="activity_room_link">링크</string>
     <string name="activiry_room_create">생성하기</string>
     <string name="activity_room_position">포지션</string>
+    <string name="activity_main_button_room_create">방 만들기</string>
+    <string name="activity_main_button_room_join">방 들어가기</string>
 </resources>

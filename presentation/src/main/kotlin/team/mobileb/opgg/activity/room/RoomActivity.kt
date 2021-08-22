@@ -12,11 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.SystemUiController
-
-private sealed class RoomState {
-    object Join : RoomState()
-    object Create : RoomState()
-}
+import team.mobileb.opgg.util.config.IntentConfig
 
 class RoomActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,14 +21,14 @@ class RoomActivity : ComponentActivity() {
         SystemUiController(window).setNavigationBarColor(Color.White)
         setContent {
             MaterialTheme {
-                Setup()
+                Setup(intent.getIntExtra(IntentConfig.RoomActivityInitStateExtra, RoomState.Create))
             }
         }
     }
 
     @Composable
-    private fun Setup() {
-        var state by remember { mutableStateOf<RoomState>(RoomState.Create) }
+    private fun Setup(initState: Int) {
+        var state by remember { mutableStateOf(initState) }
 
         Crossfade(state) { _state ->
             when (_state) {

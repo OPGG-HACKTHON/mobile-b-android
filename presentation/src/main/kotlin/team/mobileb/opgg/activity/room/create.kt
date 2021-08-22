@@ -40,6 +40,7 @@ import team.mobileb.opgg.R
 import team.mobileb.opgg.theme.LightGray
 import team.mobileb.opgg.theme.Pink
 import team.mobileb.opgg.theme.SystemUiController
+import team.mobileb.opgg.theme.transparentButtonElevation
 
 @Composable
 fun CreateRoom(window: Window, onStateChangeAction: () -> Unit) {
@@ -132,10 +133,7 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(backgroundColor = Pink),
                 shape = CircleShape,
                 modifier = Modifier.size(50.dp),
-                elevation = ButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp
-                )
+                elevation = transparentButtonElevation()
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_arrow_forward_24),
