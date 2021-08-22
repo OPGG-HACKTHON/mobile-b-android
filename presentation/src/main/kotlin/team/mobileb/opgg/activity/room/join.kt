@@ -11,10 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -143,12 +144,17 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
             Text(
                 text = stringResource(R.string.activiry_room_create),
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                modifier = Modifier.clickable { onStateChangeAction() }
+                fontSize = 20.sp
             )
-            FloatingActionButton(
-                onClick = {}, // todo: onClick Action
-                backgroundColor = Blue
+            Button(
+                onClick = { onStateChangeAction() },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Blue),
+                shape = CircleShape,
+                modifier = Modifier.size(50.dp),
+                elevation = ButtonDefaults.elevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp
+                )
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_arrow_forward_24),

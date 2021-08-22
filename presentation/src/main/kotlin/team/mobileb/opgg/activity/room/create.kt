@@ -2,17 +2,19 @@ package team.mobileb.opgg.activity.room
 
 import android.view.Window
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -36,16 +38,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import team.mobileb.opgg.R
 import team.mobileb.opgg.theme.LightGray
-import team.mobileb.opgg.theme.Orange
+import team.mobileb.opgg.theme.Pink
 import team.mobileb.opgg.theme.SystemUiController
 
 @Composable
 fun CreateRoom(window: Window, onStateChangeAction: () -> Unit) {
-    SystemUiController(window).setStatusBarColor(Orange)
+    SystemUiController(window).setStatusBarColor(Pink)
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Orange)
+            .background(Pink)
     ) {
         Header(modifier = Modifier.weight(1f))
         Content(modifier = Modifier.weight(1f), onStateChangeAction = onStateChangeAction)
@@ -124,11 +126,16 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
                 text = stringResource(R.string.activiry_room_create),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                modifier = Modifier.clickable { onStateChangeAction() }
             )
-            FloatingActionButton(
-                onClick = {}, // todo: onClick Action
-                backgroundColor = Orange
+            Button(
+                onClick = { onStateChangeAction() },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Pink),
+                shape = CircleShape,
+                modifier = Modifier.size(50.dp),
+                elevation = ButtonDefaults.elevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp
+                )
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_arrow_forward_24),

@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
     secondary = Color(0xFF9e4dd7)
 )*/
 
-val Orange = Color(0xFFff9F00)
+val Pink = Color(0xFFf94c83)
 val Blue = Color(0xFF0b70fe)
 val LightGray = Color(0xFFebebeb)
 val Gray = Color(0xFFcccccc)
