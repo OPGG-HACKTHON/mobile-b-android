@@ -122,7 +122,7 @@ class ChatActivity : ComponentActivity() {
                         height = Dimension.fillToConstraints
                     },
                 contentPadding = PaddingValues(defaultPadding),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 items(items = List(50) { StringUtil.getRandom(Random.nextInt(50)) }) { randomMessage ->
                     if (Random.nextBoolean()) { // test case
@@ -180,7 +180,7 @@ class ChatActivity : ComponentActivity() {
     @Composable
     private fun OwnBubble(message: String) { // 내 채팅 버블
         val defaultHeight = 50.dp
-        val shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp, bottomStart = 30.dp)
+        val shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp, bottomStart = 15.dp)
 
         ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
             val (bubble, profileImage) = createRefs()
