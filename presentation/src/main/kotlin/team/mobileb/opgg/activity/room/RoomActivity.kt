@@ -18,9 +18,7 @@ class RoomActivity : ComponentActivity() {
         SystemUiController(window).setNavigationBarColor(Color.White)
         setContent {
             MaterialTheme {
-                Content(
-                    intent.getIntExtra(IntentConfig.RoomActivityStateExtra, RoomState.Create)
-                )
+                Content(intent.getIntExtra(IntentConfig.RoomActivityState, RoomState.Create))
             }
         }
     }

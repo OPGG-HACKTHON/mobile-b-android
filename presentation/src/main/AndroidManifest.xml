@@ -14,7 +14,7 @@
         android:theme="@style/Theme.GameWaitingService">
 
         <activity
-            android:name=".activity.main.MainActivity"
+            android:name=".activity.chat.ChatActivity"
             android:exported="true">
 
             <intent-filter>

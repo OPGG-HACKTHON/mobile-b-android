@@ -143,7 +143,7 @@ class MainActivity : ComponentActivity() {
 
     private fun startRoomActivity(stateInitValue: Int) {
         startActivity(Intent(this, RoomActivity::class.java).apply {
-            putExtra(IntentConfig.RoomActivityStateExtra, stateInitValue)
+            putExtra(IntentConfig.RoomActivityState, stateInitValue)
         })
     }
 }
