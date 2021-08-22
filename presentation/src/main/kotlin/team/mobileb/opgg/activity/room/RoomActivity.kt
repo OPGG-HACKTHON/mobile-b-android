@@ -5,9 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import team.mobileb.opgg.R
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.util.config.IntentConfig
+import team.mobileb.opgg.util.extension.toast
 
 class RoomActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,10 +19,7 @@ class RoomActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 Content(
-                    intent.getIntExtra(
-                        IntentConfig.RoomActivityInitStateExtra,
-                        RoomState.Create
-                    )
+                    intent.getIntExtra(IntentConfig.RoomActivityStateExtra, RoomState.Create)
                 )
             }
         }
@@ -30,10 +29,22 @@ class RoomActivity : ComponentActivity() {
     private fun Content(state: Int) {
         when (state) {
             RoomState.Join -> {
-                JoinRoom(window = window, buttonAction = { /* todo */ })
+                JoinRoom(window = window, buttonAction = { link, position ->
+                    if (link.isEmpty()) {
+                        toast(getString(R.string.activity_room_toast_insert_link))
+                    } else {
+                        // todo
+                    }
+                })
             }
             RoomState.Create -> {
-                CreateRoom(window = window, buttonAction = { /* todo */ })
+                CreateRoom(window = window, buttonAction = { link ->
+                    if (link.isEmpty()) {
+                        toast(getString(R.string.activity_room_toast_insert_link))
+                    } else {
+                        // todo
+                    }
+                })
             }
         }
     }

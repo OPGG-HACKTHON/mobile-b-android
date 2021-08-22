@@ -11,4 +11,5 @@
 
     <string name="activity_main_button_room_create">방 만들기</string>
     <string name="activity_main_button_room_join">방 들어가기</string>
+    <string name="activity_room_toast_insert_link">링크를 입력해 주세요.</string>
 </resources>
