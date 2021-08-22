@@ -29,22 +29,26 @@ class RoomActivity : ComponentActivity() {
     private fun Content(state: Int) {
         when (state) {
             RoomState.Join -> {
-                JoinRoom(window = window, buttonAction = { link, position ->
-                    if (link.isEmpty()) {
-                        toast(getString(R.string.activity_room_toast_insert_link))
-                    } else {
-                        // todo
-                    }
-                })
+                JoinRoom(
+                    window = window,
+                    buttonAction = { link, position ->
+                        if (link.isEmpty()) {
+                            toast(getString(R.string.activity_room_toast_insert_link))
+                        } else {
+                            // todo
+                        }
+                    })
             }
             RoomState.Create -> {
-                CreateRoom(window = window, buttonAction = { link ->
-                    if (link.isEmpty()) {
-                        toast(getString(R.string.activity_room_toast_insert_link))
-                    } else {
-                        // todo
-                    }
-                })
+                CreateRoom(
+                    window = window,
+                    buttonAction = { link ->
+                        if (link.isEmpty()) {
+                            toast(getString(R.string.activity_room_toast_insert_link))
+                        } else {
+                            // todo
+                        }
+                    })
             }
         }
     }
