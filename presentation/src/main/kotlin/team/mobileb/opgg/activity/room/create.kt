@@ -43,7 +43,7 @@ import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
 
 @Composable
-fun CreateRoom(window: Window, buttonAction: (String) -> Unit) {
+fun CreateRoom(window: Window, buttonAction: (linkAddress: String) -> Unit) {
     SystemUiController(window).setStatusBarColor(Pink)
     Column(
         modifier = Modifier
@@ -69,7 +69,7 @@ private fun Header(modifier: Modifier) {
 }
 
 @Composable
-private fun Content(modifier: Modifier, onStateChangeAction: (String) -> Unit) {
+private fun Content(modifier: Modifier, onStateChangeAction: (linkAddress: String) -> Unit) {
     var linkField by remember { mutableStateOf(TextFieldValue()) }
 
     ConstraintLayout(

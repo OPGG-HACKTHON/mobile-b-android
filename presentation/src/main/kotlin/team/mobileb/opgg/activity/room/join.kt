@@ -43,7 +43,7 @@ import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
 
 @Composable
-fun JoinRoom(window: Window, buttonAction: (String, String) -> Unit) {
+fun JoinRoom(window: Window, buttonAction: (linkAddress: String, position: String) -> Unit) {
     SystemUiController(window).setStatusBarColor(Blue)
     Column(
         modifier = Modifier
@@ -69,7 +69,10 @@ private fun Header(modifier: Modifier) {
 }
 
 @Composable
-private fun Content(modifier: Modifier, onStateChangeAction: (String, String) -> Unit) {
+private fun Content(
+    modifier: Modifier,
+    onStateChangeAction: (linkAddress: String, position: String) -> Unit,
+) {
     val positionsList = listOf("정글", "미드", "서폿", "원딜", "탑", null).chunked(2)
     val positionButtonShape = RoundedCornerShape(10.dp)
     val positionButtonHeight = 50.dp
