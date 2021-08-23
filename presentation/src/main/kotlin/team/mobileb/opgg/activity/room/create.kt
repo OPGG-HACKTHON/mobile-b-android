@@ -2,17 +2,19 @@ package team.mobileb.opgg.activity.room
 
 import android.view.Window
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -36,19 +38,20 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import team.mobileb.opgg.R
 import team.mobileb.opgg.theme.LightGray
-import team.mobileb.opgg.theme.Orange
+import team.mobileb.opgg.theme.Pink
 import team.mobileb.opgg.theme.SystemUiController
+import team.mobileb.opgg.theme.transparentButtonElevation
 
 @Composable
-fun CreateRoom(window: Window, onStateChangeAction: () -> Unit) {
-    SystemUiController(window).setStatusBarColor(Orange)
+fun CreateRoom(window: Window, buttonAction: (String) -> Unit) {
+    SystemUiController(window).setStatusBarColor(Pink)
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Orange)
+            .background(Pink)
     ) {
         Header(modifier = Modifier.weight(1f))
-        Content(modifier = Modifier.weight(1f), onStateChangeAction = onStateChangeAction)
+        Content(modifier = Modifier.weight(1f), onStateChangeAction = buttonAction)
     }
 }
 
@@ -66,7 +69,7 @@ private fun Header(modifier: Modifier) {
 }
 
 @Composable
-private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
+private fun Content(modifier: Modifier, onStateChangeAction: (String) -> Unit) {
     var linkField by remember { mutableStateOf(TextFieldValue()) }
 
     ConstraintLayout(
@@ -90,7 +93,7 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(R.string.activity_room_link),
+                text = stringResource(R.string.activity_room_label_link),
                 color = Color.Black,
                 fontSize = 18.sp
             )
@@ -107,7 +110,8 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier
                     .padding(top = 10.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                singleLine = true
             )
         }
         Row(
@@ -121,14 +125,16 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.activiry_room_create),
+                text = stringResource(R.string.activity_room_label_create),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                modifier = Modifier.clickable { onStateChangeAction() }
             )
-            FloatingActionButton(
-                onClick = {}, // todo: onClick Action
-                backgroundColor = Orange
+            Button(
+                onClick = { onStateChangeAction(linkField.text) },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Pink),
+                shape = CircleShape,
+                modifier = Modifier.size(50.dp),
+                elevation = transparentButtonElevation()
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_arrow_forward_24),

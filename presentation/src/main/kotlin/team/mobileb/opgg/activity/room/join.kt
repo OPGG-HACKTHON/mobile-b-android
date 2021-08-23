@@ -1,8 +1,8 @@
 package team.mobileb.opgg.activity.room
 
 import android.view.Window
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,10 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -39,9 +40,10 @@ import team.mobileb.opgg.theme.Blue
 import team.mobileb.opgg.theme.Gray
 import team.mobileb.opgg.theme.LightGray
 import team.mobileb.opgg.theme.SystemUiController
+import team.mobileb.opgg.theme.transparentButtonElevation
 
 @Composable
-fun JoinRoom(window: Window, onStateChangeAction: () -> Unit) {
+fun JoinRoom(window: Window, buttonAction: (String, String) -> Unit) {
     SystemUiController(window).setStatusBarColor(Blue)
     Column(
         modifier = Modifier
@@ -49,7 +51,7 @@ fun JoinRoom(window: Window, onStateChangeAction: () -> Unit) {
             .background(Blue)
     ) {
         Header(modifier = Modifier.weight(1f))
-        Content(modifier = Modifier.weight(2f), onStateChangeAction = onStateChangeAction)
+        Content(modifier = Modifier.weight(2f), onStateChangeAction = buttonAction)
     }
 }
 
@@ -67,10 +69,20 @@ private fun Header(modifier: Modifier) {
 }
 
 @Composable
-private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
+private fun Content(modifier: Modifier, onStateChangeAction: (String, String) -> Unit) {
     val positionsList = listOf("정글", "미드", "서폿", "원딜", "탑", null).chunked(2)
     val positionButtonShape = RoundedCornerShape(10.dp)
     val positionButtonHeight = 50.dp
+    var selectedPosition by remember { mutableStateOf("") }
+
+    @Composable
+    fun positionButtonBackgroundColor(position: String) =
+        animateColorAsState(if (selectedPosition == position) Blue else Gray).value
+
+    @Composable
+    fun positionButtonTextColor(position: String) =
+        animateColorAsState(if (selectedPosition == position) Color.White else Color.Black).value
+
     var linkField by remember { mutableStateOf(TextFieldValue()) }
 
     Column(
@@ -83,7 +95,7 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = stringResource(R.string.activity_room_link),
+            text = stringResource(R.string.activity_room_label_link),
             color = Color.Black,
             fontSize = 18.sp
         )
@@ -100,10 +112,11 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier
                 .padding(top = 10.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            singleLine = true
         )
         Text(
-            text = stringResource(R.string.activity_room_position),
+            text = stringResource(R.string.activity_room_label_position),
             color = Color.Black,
             fontSize = 18.sp
         )
@@ -115,15 +128,16 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
                 positions.forEach { position ->
                     if (position != null) {
                         Button(
-                            onClick = { /*TODO*/ },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Gray),
+                            onClick = { selectedPosition = position },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = positionButtonBackgroundColor(position)
+                            ),
                             modifier = Modifier
                                 .weight(1f)
-                                .height(positionButtonHeight)
-                                .clickable { /* todo */ },
+                                .height(positionButtonHeight),
                             shape = positionButtonShape
                         ) {
-                            Text(text = position, color = Color.Black)
+                            Text(text = position, color = positionButtonTextColor(position))
                         }
                     } else {
                         Spacer(
@@ -141,14 +155,16 @@ private fun Content(modifier: Modifier, onStateChangeAction: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.activiry_room_create),
+                text = stringResource(R.string.activity_room_label_join),
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                modifier = Modifier.clickable { onStateChangeAction() }
+                fontSize = 20.sp
             )
-            FloatingActionButton(
-                onClick = {}, // todo: onClick Action
-                backgroundColor = Blue
+            Button(
+                onClick = { onStateChangeAction(linkField.text, selectedPosition) },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Blue),
+                shape = CircleShape,
+                modifier = Modifier.size(50.dp),
+                elevation = transparentButtonElevation()
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_arrow_forward_24),

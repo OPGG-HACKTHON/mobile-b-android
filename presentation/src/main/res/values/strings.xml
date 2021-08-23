@@ -4,7 +4,12 @@
     <string name="afk_description">곧 돌아올게\n갔다올게</string>
     <string name="emoji_folded_hand">🙏</string>
 
-    <string name="activity_room_link">링크</string>
-    <string name="activiry_room_create">생성하기</string>
-    <string name="activity_room_position">포지션</string>
+    <string name="activity_room_label_link">링크</string>
+    <string name="activity_room_label_position">포지션</string>
+    <string name="activity_room_label_create">생성하기</string>
+    <string name="activity_room_label_join">입장하기</string>
+
+    <string name="activity_main_button_room_create">방 만들기</string>
+    <string name="activity_main_button_room_join">방 들어가기</string>
+    <string name="activity_room_toast_insert_link">링크를 입력해 주세요.</string>
 </resources>

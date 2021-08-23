@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import team.mobileb.opgg.R
+import team.mobileb.opgg.ui.TriangleShape
 
 val RoomContentShape = RoundedCornerShape(topStart = 50.dp)
 
