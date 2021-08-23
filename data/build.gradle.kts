@@ -35,4 +35,5 @@ dependencies {
     Dependencies.network.forEach(::implementation)
     Dependencies.networkutil.forEach(::implementation)
     Dependencies.compiler.forEach(::kapt)
+    Dependencies.hilt.forEach(::implementation)
 }

@@ -73,4 +73,5 @@ dependencies {
     Dependencies.compose.forEach(::implementation)
     Dependencies.hilt.forEach(::implementation)
     Dependencies.compiler.forEach(::kapt)
+    Dependencies.lifecycle.forEach(::implementation)
 }
