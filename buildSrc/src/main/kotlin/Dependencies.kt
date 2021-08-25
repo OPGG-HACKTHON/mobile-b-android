@@ -52,6 +52,10 @@ object Versions {
     object Debug {
         const val LeakCanary = "2.7"
     }
+
+    object Lifecycle {
+        const val Master = "2.2.0"
+    }
 }
 
 object Dependencies {
@@ -99,5 +103,11 @@ object Dependencies {
 
     val compiler = listOf(
         "com.google.dagger:hilt-android-compiler:${Versions.Hilt.Master}"
+    )
+
+    val lifecycle = listOf(
+        "androidx.lifecycle:lifecycle-extensions:${Versions.Lifecycle.Master}",
+        "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.Lifecycle.Master}",
+        "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
     )
 }
