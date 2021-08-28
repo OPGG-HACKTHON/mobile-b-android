@@ -2,13 +2,13 @@ package team.mobileb.opgg.api.model
 
 import com.google.gson.annotations.SerializedName
 
-data class RoomInfoResponse(
+data class PositionInfoResponse(
     @SerializedName("code")
-    val code: Int,
+    val code : Number,
     @SerializedName("message")
-    val message: String,
+    val message : String,
     @SerializedName("result")
-    val result: ResultResponse,
+    val result : List<PositionResultResponse>,
     @SerializedName("responseTime")
-    val responseTime: String
+    val responseTime : String
 )

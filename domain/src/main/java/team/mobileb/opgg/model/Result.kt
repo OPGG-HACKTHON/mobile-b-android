@@ -1,7 +1,7 @@
 package team.mobileb.opgg.model
 
 data class Result(
-    val roomSeq: Number,
+    val roomSeq: Int,
     val userKey: String,
     val inviteCode: String,
     val inviteURL: String,
