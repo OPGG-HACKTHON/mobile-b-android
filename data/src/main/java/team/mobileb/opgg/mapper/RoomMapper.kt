@@ -11,7 +11,7 @@ import team.mobileb.opgg.model.RoomInfo
 
 object RoomMapper {
 
-    private fun mapToResult(resultResponse: ResultResponse): Result {
+    private fun toResult(resultResponse: ResultResponse): Result {
         return Result(
             roomSeq = resultResponse.roomSeq,
             userKey = resultResponse.userKey,
@@ -21,7 +21,7 @@ object RoomMapper {
         )
     }
 
-    private fun mapToResultResponse(result: Result): ResultResponse {
+    private fun toResultResponse(result: Result): ResultResponse {
         return ResultResponse(
             roomSeq = result.roomSeq,
             userKey = result.userKey,
@@ -31,7 +31,7 @@ object RoomMapper {
         )
     }
 
-    private fun mapToCheckResult(checkResultResponse: CheckResultResponse): CheckResult {
+    private fun toCheckResult(checkResultResponse: CheckResultResponse): CheckResult {
         return CheckResult(
             messageMapping = checkResultResponse.messageMapping,
             sendTo = checkResultResponse.sendTo
@@ -39,7 +39,7 @@ object RoomMapper {
 
     }
 
-    private fun mapToCheckResultResponse(checkResult: CheckResult): CheckResultResponse {
+    private fun toCheckResultResponse(checkResult: CheckResult): CheckResultResponse {
         return CheckResultResponse(
             messageMapping = checkResult.messageMapping,
             sendTo = checkResult.sendTo
@@ -47,39 +47,39 @@ object RoomMapper {
     }
 
 
-    fun mapperToRoomInfo(roomInfoResponse: RoomInfoResponse): RoomInfo {
+    fun toRoomInfo(roomInfoResponse: RoomInfoResponse): RoomInfo {
         return RoomInfo(
             code = roomInfoResponse.code,
             message = roomInfoResponse.message,
-            result = mapToResult(roomInfoResponse.result),
+            result = toResult(roomInfoResponse.result),
             responseTime = roomInfoResponse.responseTime
         )
     }
 
-    fun mapperToRoomInfoResponse(roomInfo: RoomInfo): RoomInfoResponse {
+    fun toRoomInfoResponse(roomInfo: RoomInfo): RoomInfoResponse {
         return RoomInfoResponse(
             code = roomInfo.code,
             message = roomInfo.message,
-            result = mapToResultResponse(roomInfo.result),
+            result = toResultResponse(roomInfo.result),
             responseTime = roomInfo.responseTime
         )
     }
 
-    fun mapperToCheckInfo(checkInfoResponse: CheckInfoResponse): CheckInfo {
+    fun toCheckInfo(checkInfoResponse: CheckInfoResponse): CheckInfo {
         return CheckInfo(
             code = checkInfoResponse.code,
             message = checkInfoResponse.message,
-            result = mapToCheckResult(checkInfoResponse.result),
+            result = toCheckResult(checkInfoResponse.result),
             responseTime = checkInfoResponse.responseTime
         )
 
     }
 
-    fun mapperToCheckInfoResponse(checkInfo: CheckInfo): CheckInfoResponse {
+    fun toCheckInfoResponse(checkInfo: CheckInfo): CheckInfoResponse {
         return CheckInfoResponse(
             code = checkInfo.code,
             message = checkInfo.message,
-            result = mapToCheckResultResponse(checkInfo.result),
+            result = toCheckResultResponse(checkInfo.result),
             responseTime = checkInfo.responseTime
         )
     }

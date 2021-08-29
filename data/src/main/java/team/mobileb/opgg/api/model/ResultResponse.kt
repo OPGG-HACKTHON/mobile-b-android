@@ -1,11 +1,10 @@
 package team.mobileb.opgg.api.model
 
 import com.google.gson.annotations.SerializedName
-import team.mobileb.opgg.model.Result
 
 data class ResultResponse(
     @SerializedName("roomSeq")
-    val roomSeq : Number,
+    val roomSeq : Int,
     @SerializedName("userKey")
     val userKey: String,
     @SerializedName("inviteCode")

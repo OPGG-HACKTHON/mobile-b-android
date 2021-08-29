@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -21,7 +20,7 @@ import team.mobileb.opgg.usecase.RetrieveRoomUseCase
 
 class RoomViewModel : ViewModel() {
 
-    private val localhost = "192.168.1.104" // 실행 시 자신의 ip로 바꾸기  이식: 192.168.1.104
+    private val localhost = "18.189.220.120"
 
     private val httpLoggingInterceptor = HttpLoggingInterceptor()
     private val retrofit = Retrofit.Builder()
@@ -60,14 +59,16 @@ class RoomViewModel : ViewModel() {
             _checkRoomInfo.value = checkRoomUseCase.check(inviteCode)
         }
     }
-    private fun getInterceptor(interceptor: Interceptor): OkHttpClient {
+    private fun getInterceptor(interceptor: HttpLoggingInterceptor): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(interceptor)
+
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY).setLevel(HttpLoggingInterceptor.Level.BASIC).setLevel(HttpLoggingInterceptor.Level.HEADERS)
         return builder.build()
     }
     private fun <T> buildRetrofit(retrofit: Retrofit.Builder, service: Class<T>) =
         retrofit.client(getInterceptor(httpLoggingInterceptor))
-            .baseUrl("https://$localhost:8080/api/v1/")
+            .baseUrl("http://$localhost:8090/api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(service)
