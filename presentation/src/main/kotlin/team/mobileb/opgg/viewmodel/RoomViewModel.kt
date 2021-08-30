@@ -59,13 +59,17 @@ class RoomViewModel : ViewModel() {
             _checkRoomInfo.value = checkRoomUseCase.check(inviteCode)
         }
     }
+
     private fun getInterceptor(interceptor: HttpLoggingInterceptor): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(interceptor)
 
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY).setLevel(HttpLoggingInterceptor.Level.BASIC).setLevel(HttpLoggingInterceptor.Level.HEADERS)
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+            .setLevel(HttpLoggingInterceptor.Level.BASIC)
+            .setLevel(HttpLoggingInterceptor.Level.HEADERS)
         return builder.build()
     }
+
     private fun <T> buildRetrofit(retrofit: Retrofit.Builder, service: Class<T>) =
         retrofit.client(getInterceptor(httpLoggingInterceptor))
             .baseUrl("http://$localhost:8090/api/v1/")

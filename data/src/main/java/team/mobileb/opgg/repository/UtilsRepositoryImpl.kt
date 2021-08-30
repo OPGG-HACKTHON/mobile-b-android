@@ -5,9 +5,9 @@ import team.mobileb.opgg.mapper.UtilsMapper
 import team.mobileb.opgg.model.PositionInfo
 
 class UtilsRepositoryImpl(
-    private val dataSource : UtilsRemoteDataSource
-) : UtilsRepository{
+    private val dataSource: UtilsRemoteDataSource
+) : UtilsRepository {
     override suspend fun retirevePosition(): PositionInfo {
-        return UtilsMapper.toPositionInfo (dataSource.retrievePosition())
+        return UtilsMapper.toPositionInfo(dataSource.retrievePosition())
     }
 }

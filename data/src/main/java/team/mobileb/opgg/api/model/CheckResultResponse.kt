@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 data class CheckResultResponse(
     @SerializedName("messageMapping")
-    val messageMapping : String,
+    val messageMapping: String,
     @SerializedName("sendTo")
-    val sendTo : String
+    val sendTo: String
 )
 

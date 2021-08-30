@@ -11,12 +11,10 @@ class RoomRepositoryImpl(
 ) : RoomRepository {
     override suspend fun createRoom(userKey: String): RoomInfo {
         return RoomMapper.toRoomInfo(dataSource.createRoom(userKey))
-            //request.createRoom(userKey)
     }
 
     override suspend fun retrieveRoom(userKey: String): RoomInfo {
         return RoomMapper.toRoomInfo(dataSource.retrieveRoom(userKey))
-            //request.retrieveRoom(userKey)
     }
 
     override suspend fun checkRoom(inviteCode: String): CheckInfo {
