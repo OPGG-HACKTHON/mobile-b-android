@@ -8,22 +8,18 @@ import team.mobileb.opgg.model.PositionResult
 object UtilsMapper {
 
     private fun toPositionResult(positionResultResponse: List<PositionResultResponse>): List<PositionResult> {
-
-        val list = arrayListOf<PositionResult>()
+        val list = mutableListOf<PositionResult>()
         positionResultResponse.forEach {
             list.add(PositionResult(it.code, it.name))
         }
-
         return list
     }
 
     fun toPositionResultResponse(positionResult: List<PositionResult>): List<PositionResultResponse> {
-
-        val list = arrayListOf<PositionResultResponse>()
+        val list = mutableListOf<PositionResultResponse>()
         positionResult.forEach {
             list.add(PositionResultResponse(it.code, it.name))
         }
-
         return list
     }
 
@@ -33,8 +29,9 @@ object UtilsMapper {
             message = positionInfoResponse.message,
             result = toPositionResult(positionInfoResponse.result),
             responseTime = positionInfoResponse.responseTime
-            )
+        )
     }
+
     fun toPositionInfoResponse(positionInfo: PositionInfo): PositionInfoResponse {
         return PositionInfoResponse(
             code = positionInfo.code,

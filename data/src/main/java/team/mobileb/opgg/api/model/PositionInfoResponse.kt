@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 data class PositionInfoResponse(
     @SerializedName("code")
-    val code : Number,
+    val code: Int,
     @SerializedName("message")
-    val message : String,
+    val message: String,
     @SerializedName("result")
-    val result : List<PositionResultResponse>,
+    val result: List<PositionResultResponse>,
     @SerializedName("responseTime")
-    val responseTime : String
+    val responseTime: String
 )

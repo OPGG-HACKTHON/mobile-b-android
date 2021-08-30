@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName
 
 data class ResultResponse(
     @SerializedName("roomSeq")
-    val roomSeq : Int,
+    val roomSeq: Int,
     @SerializedName("userKey")
     val userKey: String,
     @SerializedName("inviteCode")
-    val inviteCode : String,
+    val inviteCode: String,
     @SerializedName("inviteURL")
-    val inviteURL : String,
+    val inviteURL: String,
     @SerializedName("createdAtStr")
-    val createdAtStr : String
+    val createdAtStr: String
 )
 
