@@ -7,8 +7,9 @@ import team.mobileb.opgg.data.api.RoomApi
 import team.mobileb.opgg.data.mapper.toDomain
 import team.mobileb.opgg.data.util.isValid
 import team.mobileb.opgg.domain.RequestResult
+import team.mobileb.opgg.domain.repository.RoomRepository
 
-class RoomRemoteDataSourceImpl(private val api: RoomApi) : RoomRemoteDataSource {
+class RoomRepositoryImpl(private val api: RoomApi) : RoomRepository {
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun createRoom(userKey: String) = callbackFlow {
         try {

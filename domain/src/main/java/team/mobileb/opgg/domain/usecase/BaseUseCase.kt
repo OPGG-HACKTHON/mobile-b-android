@@ -6,3 +6,7 @@ import team.mobileb.opgg.domain.RequestResult
 interface BaseUseCase<in Parameter, out ResultType> {
     suspend operator fun invoke(parameter: Parameter): Flow<RequestResult<ResultType>>
 }
+
+interface BaseUseCaseWithoutParameter<out ResultType> {
+    suspend operator fun invoke(): Flow<RequestResult<ResultType>>
+}
