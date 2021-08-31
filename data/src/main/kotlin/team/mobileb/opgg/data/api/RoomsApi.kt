@@ -9,14 +9,14 @@ import retrofit2.http.Query
 import team.mobileb.opgg.data.model.CheckInfoResponse
 import team.mobileb.opgg.data.model.RoomInfoResponse
 
-interface RoomApi {
+interface RoomsApi {
     @Headers("Content-Type: application/hal+json", "Accept: application/hal+json")
-    @POST("/rooms")
+    @POST("/")
     suspend fun createRoom(@Query("userKey") userKey: String): Response<RoomInfoResponse>
 
-    @GET("/rooms/{userKey}")
+    @GET("/{userKey}")
     suspend fun retrieveRoom(@Path("userKey") userKey: String): Response<RoomInfoResponse>
 
-    @GET("/rooms/check/{inviteCode}")
+    @GET("/check/{inviteCode}")
     suspend fun checkRoom(@Path("inviteCode") inviteCode: String): Response<CheckInfoResponse>
 }

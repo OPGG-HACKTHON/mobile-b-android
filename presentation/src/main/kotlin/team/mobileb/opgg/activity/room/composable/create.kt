@@ -1,4 +1,4 @@
-package team.mobileb.opgg.activity.room
+package team.mobileb.opgg.activity.room.composable
 
 import android.view.Window
 import androidx.compose.foundation.background
@@ -23,11 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,14 +38,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import team.mobileb.opgg.R
+import team.mobileb.opgg.activity.room.RoomViewModel
 import team.mobileb.opgg.theme.LightGray
 import team.mobileb.opgg.theme.Pink
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
+import team.mobileb.opgg.util.extension.toast
 
 @Composable
-fun CreateRoom(window: Window, buttonAction: (linkAddress: String) -> Unit) {
+fun CreateRoom(window: Window) {
     SystemUiController(window).setStatusBarColor(Pink)
     Column(
         modifier = Modifier
@@ -51,7 +57,7 @@ fun CreateRoom(window: Window, buttonAction: (linkAddress: String) -> Unit) {
             .background(Pink)
     ) {
         Header(modifier = Modifier.weight(1f))
-        Content(modifier = Modifier.weight(1f), onStateChangeAction = buttonAction)
+        Content(modifier = Modifier.weight(1f))
     }
 }
 
@@ -69,7 +75,10 @@ private fun Header(modifier: Modifier) {
 }
 
 @Composable
-private fun Content(modifier: Modifier, onStateChangeAction: (linkAddress: String) -> Unit) {
+private fun Content(modifier: Modifier) {
+    val context = LocalContext.current
+    val vm: RoomViewModel = viewModel()
+    val coroutineScope = rememberCoroutineScope()
     var linkField by remember { mutableStateOf(TextFieldValue()) }
 
     ConstraintLayout(
@@ -93,7 +102,7 @@ private fun Content(modifier: Modifier, onStateChangeAction: (linkAddress: Strin
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(R.string.activity_room_label_link),
+                text = stringResource(R.string.composable_room_link),
                 color = Color.Black,
                 fontSize = 18.sp
             )
@@ -125,12 +134,24 @@ private fun Content(modifier: Modifier, onStateChangeAction: (linkAddress: Strin
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.activity_room_label_create),
+                text = stringResource(R.string.composable_create_label),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
             )
             Button(
-                onClick = { onStateChangeAction(linkField.text) },
+                onClick = {
+                    val link = linkField.text
+                    if (link.isNotBlank()) {
+                        coroutineScope.launch {
+                            // TODO
+                        }
+                    } else {
+                        toast(
+                            context,
+                            context.getString(R.string.composable_room_toast_insert_link)
+                        )
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Pink),
                 shape = CircleShape,
                 modifier = Modifier.size(50.dp),

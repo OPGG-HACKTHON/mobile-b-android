@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import team.mobileb.opgg.R
 import team.mobileb.opgg.activity.room.RoomActivity
-import team.mobileb.opgg.activity.room.RoomState
+import team.mobileb.opgg.activity.room.RoomPage
 import team.mobileb.opgg.theme.Blue
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.SystemUiController
@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
                     }
             ) {
                 Button(
-                    onClick = { startRoomActivity(RoomState.Create) },
+                    onClick = { startRoomActivity(RoomPage.Create) },
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(1f),
@@ -124,7 +124,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 Button(
-                    onClick = { startRoomActivity(RoomState.Join) },
+                    onClick = { startRoomActivity(RoomPage.Join) },
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(1f),

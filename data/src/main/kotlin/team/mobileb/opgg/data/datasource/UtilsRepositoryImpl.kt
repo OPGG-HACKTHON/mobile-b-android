@@ -7,9 +7,9 @@ import team.mobileb.opgg.data.api.UtilsApi
 import team.mobileb.opgg.data.mapper.toDomain
 import team.mobileb.opgg.data.util.isValid
 import team.mobileb.opgg.domain.RequestResult
-import team.mobileb.opgg.domain.repository.UtilRepository
+import team.mobileb.opgg.domain.repository.UtilsRepository
 
-class UtilRepositoryImpl(private val api: UtilsApi) : UtilRepository {
+class UtilsRepositoryImpl(private val api: UtilsApi) : UtilsRepository {
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun retrievePosition() = callbackFlow {
         try {

@@ -1,4 +1,4 @@
-package team.mobileb.opgg.activity.room
+package team.mobileb.opgg.activity.room.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

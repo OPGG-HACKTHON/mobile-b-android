@@ -3,13 +3,13 @@ package team.mobileb.opgg.data.datasource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import team.mobileb.opgg.data.api.RoomApi
+import team.mobileb.opgg.data.api.RoomsApi
 import team.mobileb.opgg.data.mapper.toDomain
 import team.mobileb.opgg.data.util.isValid
 import team.mobileb.opgg.domain.RequestResult
 import team.mobileb.opgg.domain.repository.RoomRepository
 
-class RoomRepositoryImpl(private val api: RoomApi) : RoomRepository {
+class RoomRepositoryImpl(private val api: RoomsApi) : RoomRepository {
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun createRoom(userKey: String) = callbackFlow {
         try {
