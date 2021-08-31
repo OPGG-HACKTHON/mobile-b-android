@@ -8,8 +8,6 @@ import team.mobileb.opgg.data.api.RoomsApi
 import team.mobileb.opgg.data.api.UtilsApi
 import team.mobileb.opgg.data.datasource.RoomRepositoryImpl
 import team.mobileb.opgg.data.datasource.UtilsRepositoryImpl
-import team.mobileb.opgg.di.qualifier.RoomsApiQualifier
-import team.mobileb.opgg.di.qualifier.UtilsApiQualifier
 import team.mobileb.opgg.domain.repository.RoomRepository
 import team.mobileb.opgg.domain.repository.UtilsRepository
 import javax.inject.Singleton
@@ -19,11 +17,9 @@ import javax.inject.Singleton
 object RepoModule {
     @Provides
     @Singleton
-    fun provideRoomsRepository(@RoomsApiQualifier api: RoomsApi): RoomRepository =
-        RoomRepositoryImpl(api)
+    fun provideRoomsRepository(api: RoomsApi): RoomRepository = RoomRepositoryImpl(api)
 
     @Provides
     @Singleton
-    fun provideUtilsRepository(@UtilsApiQualifier api: UtilsApi): UtilsRepository =
-        UtilsRepositoryImpl(api)
+    fun provideUtilsRepository(api: UtilsApi): UtilsRepository = UtilsRepositoryImpl(api)
 }

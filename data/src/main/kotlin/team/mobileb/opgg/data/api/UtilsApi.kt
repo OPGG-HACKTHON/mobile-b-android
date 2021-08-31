@@ -7,6 +7,6 @@ import team.mobileb.opgg.data.model.PositionInfoResponse
 
 interface UtilsApi {
     @Headers("Content-Type: application/hal+json", "Accept: application/hal+json")
-    @GET("/position")
+    @GET("position")
     suspend fun retrievePosition(): Response<PositionInfoResponse>
 }

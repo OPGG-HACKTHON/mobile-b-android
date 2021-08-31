@@ -9,12 +9,11 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import team.mobileb.opgg.di.qualifier.RoomsApiQualifier
-import team.mobileb.opgg.di.qualifier.UtilsApiQualifier
+import team.mobileb.opgg.data.api.RoomsApi
+import team.mobileb.opgg.data.api.UtilsApi
 import javax.inject.Singleton
 import kotlin.reflect.KClass
 
-@Suppress("HasPlatformType")
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
@@ -38,14 +37,12 @@ object ApiModule {
         .create(service.java)
 
     @Provides
-    @RoomsApiQualifier
     @Singleton
-    fun provideRoomRetrofit(loggingInterceptor: HttpLoggingInterceptor) =
-        buildRetrofit(loggingInterceptor, "$BaseUrl/rooms", RoomsApiQualifier::class)
+    fun provideRoomApi(loggingInterceptor: HttpLoggingInterceptor): RoomsApi =
+        buildRetrofit(loggingInterceptor, "$BaseUrl/rooms/", RoomsApi::class)
 
     @Provides
-    @UtilsApiQualifier
     @Singleton
-    fun provideUtilRetrofit(loggingInterceptor: HttpLoggingInterceptor) =
-        buildRetrofit(loggingInterceptor, "$BaseUrl/utils", UtilsApiQualifier::class)
+    fun provideUtilApi(loggingInterceptor: HttpLoggingInterceptor): UtilsApi =
+        buildRetrofit(loggingInterceptor, "$BaseUrl/utils/", UtilsApi::class)
 }
