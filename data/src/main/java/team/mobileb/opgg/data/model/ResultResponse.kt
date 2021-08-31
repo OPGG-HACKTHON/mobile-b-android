@@ -1,4 +1,4 @@
-package team.mobileb.opgg.data.api.model
+package team.mobileb.opgg.data.model
 
 import com.google.gson.annotations.SerializedName
 

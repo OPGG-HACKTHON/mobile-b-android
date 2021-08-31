@@ -1,14 +1,14 @@
-package team.mobileb.opgg.data.api.model
+package team.mobileb.opgg.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class CheckInfoResponse(
+data class RoomInfoResponse(
     @SerializedName("code")
     val code: Int,
     @SerializedName("message")
     val message: String,
     @SerializedName("result")
-    val result: CheckResultResponse,
+    val result: ResultResponse,
     @SerializedName("responseTime")
-    val responseTime: String,
+    val responseTime: String
 )

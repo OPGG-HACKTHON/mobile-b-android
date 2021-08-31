@@ -1,87 +1,38 @@
 package team.mobileb.opgg.data.mapper
 
-import team.mobileb.opgg.data.api.model.CheckInfoResponse
-import team.mobileb.opgg.data.api.model.CheckResultResponse
-import team.mobileb.opgg.data.api.model.ResultResponse
-import team.mobileb.opgg.data.api.model.RoomInfoResponse
+import team.mobileb.opgg.data.model.CheckInfoResponse
+import team.mobileb.opgg.data.model.CheckResultResponse
+import team.mobileb.opgg.data.model.ResultResponse
+import team.mobileb.opgg.data.model.RoomInfoResponse
 import team.mobileb.opgg.domain.model.CheckInfo
 import team.mobileb.opgg.domain.model.CheckResult
 import team.mobileb.opgg.domain.model.Result
 import team.mobileb.opgg.domain.model.RoomInfo
 
-object RoomMapper {
+private fun ResultResponse.toDomain() = Result(
+    roomSeq = roomSeq,
+    userKey = userKey,
+    inviteCode = inviteCode,
+    inviteURL = inviteURL,
+    createdAtStr = createdAtStr
+)
 
-    private fun toResult(resultResponse: ResultResponse): Result {
-        return Result(
-            roomSeq = resultResponse.roomSeq,
-            userKey = resultResponse.userKey,
-            inviteCode = resultResponse.inviteCode,
-            inviteURL = resultResponse.inviteURL,
-            createdAtStr = resultResponse.createdAtStr
-        )
-    }
+private fun CheckResultResponse.toDomain() = CheckResult(
+    messageMapping = messageMapping,
+    sendTo = sendTo
+)
 
-    private fun toResultResponse(result: Result): ResultResponse {
-        return ResultResponse(
-            roomSeq = result.roomSeq,
-            userKey = result.userKey,
-            inviteCode = result.inviteCode,
-            inviteURL = result.inviteURL,
-            createdAtStr = result.createdAtStr
-        )
-    }
+fun RoomInfoResponse.toDomain() = RoomInfo(
+    code = code,
+    message = message,
+    result = result.toDomain(),
+    responseTime = responseTime
+)
 
-    private fun toCheckResult(checkResultResponse: CheckResultResponse): CheckResult {
-        return CheckResult(
-            messageMapping = checkResultResponse.messageMapping,
-            sendTo = checkResultResponse.sendTo
-        )
+fun CheckInfoResponse.toDomain() = CheckInfo(
+    code = code,
+    message = message,
+    result = result.toDomain(),
+    responseTime = responseTime
+)
 
-    }
-
-    private fun toCheckResultResponse(checkResult: CheckResult): CheckResultResponse {
-        return CheckResultResponse(
-            messageMapping = checkResult.messageMapping,
-            sendTo = checkResult.sendTo
-        )
-    }
-
-
-    fun toRoomInfo(roomInfoResponse: RoomInfoResponse): RoomInfo {
-        return RoomInfo(
-            code = roomInfoResponse.code,
-            message = roomInfoResponse.message,
-            result = toResult(roomInfoResponse.result),
-            responseTime = roomInfoResponse.responseTime
-        )
-    }
-
-    fun toRoomInfoResponse(roomInfo: RoomInfo): RoomInfoResponse {
-        return RoomInfoResponse(
-            code = roomInfo.code,
-            message = roomInfo.message,
-            result = toResultResponse(roomInfo.result),
-            responseTime = roomInfo.responseTime
-        )
-    }
-
-    fun toCheckInfo(checkInfoResponse: CheckInfoResponse): CheckInfo {
-        return CheckInfo(
-            code = checkInfoResponse.code,
-            message = checkInfoResponse.message,
-            result = toCheckResult(checkInfoResponse.result),
-            responseTime = checkInfoResponse.responseTime
-        )
-
-    }
-
-    fun toCheckInfoResponse(checkInfo: CheckInfo): CheckInfoResponse {
-        return CheckInfoResponse(
-            code = checkInfo.code,
-            message = checkInfo.message,
-            result = toCheckResultResponse(checkInfo.result),
-            responseTime = checkInfo.responseTime
-        )
-    }
-
-}

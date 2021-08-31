@@ -5,5 +5,5 @@ data class Result(
     val userKey: String,
     val inviteCode: String,
     val inviteURL: String,
-    val createdAtStr: String
+    val createdAtStr: String,
 )

@@ -1,15 +1,9 @@
 package team.mobileb.opgg.data.datasource
 
-import team.mobileb.opgg.data.api.UtilsApi
-import team.mobileb.opgg.data.api.model.PositionInfoResponse
+import kotlinx.coroutines.flow.Flow
+import team.mobileb.opgg.domain.RequestResult
+import team.mobileb.opgg.domain.model.PositionInfo
 
 interface UtilsRemoteDataSource {
-    suspend fun retrievePosition(): PositionInfoResponse
-}
-
-class UtilsRemoteDataSourceImpl(private val api: UtilsApi) : UtilsRemoteDataSource {
-    override suspend fun retrievePosition(): PositionInfoResponse {
-        return api.retrievePosition()
-    }
-
+    suspend fun retrievePosition(): Flow<RequestResult<PositionInfo>>
 }

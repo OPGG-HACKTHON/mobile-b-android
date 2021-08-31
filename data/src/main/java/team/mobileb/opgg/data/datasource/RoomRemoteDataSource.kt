@@ -1,28 +1,12 @@
 package team.mobileb.opgg.data.datasource
 
-import team.mobileb.opgg.data.api.RoomApi
-import team.mobileb.opgg.data.api.model.CheckInfoResponse
-import team.mobileb.opgg.data.api.model.RoomInfoResponse
+import kotlinx.coroutines.flow.Flow
+import team.mobileb.opgg.domain.RequestResult
+import team.mobileb.opgg.domain.model.CheckInfo
+import team.mobileb.opgg.domain.model.RoomInfo
 
 interface RoomRemoteDataSource {
-    suspend fun createRoom(userKey: String): RoomInfoResponse
-    suspend fun retrieveRoom(userKey: String): RoomInfoResponse
-    suspend fun checkRoom(inviteCode: String): CheckInfoResponse
-}
-
-class RoomRemoteDataSourceImpl(private val api: RoomApi) : RoomRemoteDataSource {
-    override suspend fun createRoom(userKey: String): RoomInfoResponse {
-        return api.createRoom(userKey)
-    }
-
-
-    override suspend fun retrieveRoom(userKey: String): RoomInfoResponse {
-        return api.retrieveRoom(userKey)
-    }
-
-    override suspend fun checkRoom(inviteCode: String): CheckInfoResponse {
-        return api.checkRoom(inviteCode)
-    }
-
-
+    suspend fun createRoom(userKey: String): Flow<RequestResult<RoomInfo>>
+    suspend fun retrieveRoom(userKey: String): Flow<RequestResult<RoomInfo>>
+    suspend fun checkRoom(inviteCode: String): Flow<RequestResult<CheckInfo>>
 }

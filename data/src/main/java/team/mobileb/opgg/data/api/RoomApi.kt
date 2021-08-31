@@ -1,16 +1,16 @@
 package team.mobileb.opgg.data.api
 
 import retrofit2.Response
-import retrofit2.http.*
-import team.mobileb.opgg.data.api.model.CheckInfoResponse
-import team.mobileb.opgg.data.api.model.RoomInfoResponse
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
+import team.mobileb.opgg.data.model.CheckInfoResponse
+import team.mobileb.opgg.data.model.RoomInfoResponse
 
 interface RoomApi {
-
-    @Headers(
-        "Content-Type: application/hal+json",
-        "Accept: application/hal+json"
-    )
+    @Headers("Content-Type: application/hal+json", "Accept: application/hal+json")
     @POST("/rooms")
     suspend fun createRoom(@Query("userKey") userKey: String): Response<RoomInfoResponse>
 

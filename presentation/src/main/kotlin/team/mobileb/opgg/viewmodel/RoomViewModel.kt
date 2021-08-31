@@ -13,7 +13,7 @@ import team.mobileb.opgg.data.api.RoomApi
 import team.mobileb.opgg.data.datasource.RoomRemoteDataSourceImpl
 import team.mobileb.opgg.domain.model.CheckInfo
 import team.mobileb.opgg.domain.model.RoomInfo
-import team.mobileb.opgg.data.repository.RoomRepositoryImpl
+import team.mobileb.opgg.domain.repository.RoomRepositoryImpl
 import team.mobileb.opgg.domain.usecase.CheckRoomUseCase
 import team.mobileb.opgg.domain.usecase.CreateRoomUseCase
 import team.mobileb.opgg.domain.usecase.RetrieveRoomUseCase
