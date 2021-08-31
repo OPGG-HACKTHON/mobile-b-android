@@ -9,14 +9,14 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import team.mobileb.opgg.api.RoomApi
-import team.mobileb.opgg.datasource.RoomRemoteDataSourceImpl
-import team.mobileb.opgg.model.CheckInfo
-import team.mobileb.opgg.model.RoomInfo
-import team.mobileb.opgg.repository.RoomRepositoryImpl
-import team.mobileb.opgg.usecase.CheckRoomUseCase
-import team.mobileb.opgg.usecase.CreateRoomUseCase
-import team.mobileb.opgg.usecase.RetrieveRoomUseCase
+import team.mobileb.opgg.data.api.RoomApi
+import team.mobileb.opgg.data.datasource.RoomRemoteDataSourceImpl
+import team.mobileb.opgg.domain.model.CheckInfo
+import team.mobileb.opgg.domain.model.RoomInfo
+import team.mobileb.opgg.data.repository.RoomRepositoryImpl
+import team.mobileb.opgg.domain.usecase.CheckRoomUseCase
+import team.mobileb.opgg.domain.usecase.CreateRoomUseCase
+import team.mobileb.opgg.domain.usecase.RetrieveRoomUseCase
 
 class RoomViewModel : ViewModel() {
 

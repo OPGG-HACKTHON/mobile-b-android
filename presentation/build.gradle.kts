@@ -57,13 +57,14 @@ android {
 }
 
 dependencies {
-    implementation(project(":data"))
-    implementation(project(":domain"))
     implementation(Dependencies.json)
-    implementation(Dependencies.coil) {
+    implementation(Dependencies.landscapistcoil) {
         exclude(group = "androidx.appcompat", module = "appcompat")
         exclude(group = "androidx.appcompat", module = "appcompat-resources")
     }
+
+    implementation(project(":data"))
+    implementation(project(":domain"))
 
     Dependencies.debug.forEach(::debugImplementation)
     Dependencies.essential.forEach(::implementation)
@@ -72,6 +73,6 @@ dependencies {
     Dependencies.ui.forEach(::implementation)
     Dependencies.compose.forEach(::implementation)
     Dependencies.hilt.forEach(::implementation)
-    Dependencies.compiler.forEach(::kapt)
     Dependencies.lifecycle.forEach(::implementation)
+    Dependencies.compiler.forEach(::kapt)
 }

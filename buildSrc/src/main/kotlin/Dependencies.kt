@@ -4,7 +4,7 @@ object Application {
     const val minSdk = 24
     const val targetSdk = 30
     const val compileSdk = 30
-    const val jvmTarget = "1.8"
+    const val jvmTarget = "11"
     const val versionCode = 1
     const val versionName = "opgg_mobile-b"
 
@@ -13,6 +13,8 @@ object Application {
 }
 
 object Versions {
+    const val Gson = "2.8.8"
+
     object Essential {
         const val Kotlin = "1.5.21"
         const val CoreKtx = "1.6.0"
@@ -23,15 +25,11 @@ object Versions {
     object Ui {
         const val ConstraintLayout = "1.0.0-beta01"
         const val Material = "1.4.0"
-        const val LandscapistCoil = "1.3.2"
+        const val LandscapistCoil = "1.3.4"
     }
 
     object Util {
-        const val CheckDependencyUpdates = "1.4.1"
-    }
-
-    object NetworkUtil {
-        const val Gson = "2.8.7"
+        const val CheckDependencyUpdates = "1.5.0"
     }
 
     object Network {
@@ -40,8 +38,7 @@ object Versions {
     }
 
     object Hilt {
-        // https://stackoverflow.com/questions/68492472/hilt-field-injection-throwing-property-not-initialized-error
-        const val Master = "2.37" // todo: 2.38
+        const val Master = "2.38.1"
     }
 
     object Compose {
@@ -55,12 +52,13 @@ object Versions {
 
     object Lifecycle {
         const val Master = "2.2.0"
+        const val Compose = "1.0.0-alpha07"
     }
 }
 
 object Dependencies {
-    const val json = "com.google.code.gson:gson:${Versions.NetworkUtil.Gson}"
-    const val coil =
+    const val json = "com.google.code.gson:gson:${Versions.Gson}"
+    const val landscapistcoil =
         "com.github.skydoves:landscapist-coil:${Versions.Ui.LandscapistCoil}"
 
     val debug = listOf(
@@ -108,6 +106,6 @@ object Dependencies {
     val lifecycle = listOf(
         "androidx.lifecycle:lifecycle-extensions:${Versions.Lifecycle.Master}",
         "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.Lifecycle.Master}",
-        "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
+        "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Lifecycle.Compose}"
     )
 }
