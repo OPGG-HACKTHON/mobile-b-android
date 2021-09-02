@@ -5,14 +5,14 @@ import team.mobileb.opgg.data.model.PositionResultResponse
 import team.mobileb.opgg.domain.model.PositionInfo
 import team.mobileb.opgg.domain.model.PositionResult
 
-private fun PositionResultResponse.toDomain() = PositionResult(
-    code = code,
-    name = name
+private fun positionResultResponseToDomain(response: PositionResultResponse) = PositionResult(
+    code = response.code,
+    name = response.name
 )
 
 fun PositionInfoResponse.toDomain() = PositionInfo(
     code = code,
     message = message,
-    result = result.map { it.toDomain() },
+    result = result.map(::positionResultResponseToDomain),
     responseTime = responseTime
 )
