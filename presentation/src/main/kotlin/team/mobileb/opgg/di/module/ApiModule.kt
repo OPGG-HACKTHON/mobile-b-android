@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
-    private const val BaseUrl = "http://18.189.220.120:8090/api/v1"
+    private const val BaseUrl = "http://ec2-18-222-138-73.us-east-2.compute.amazonaws.com:3724/api/v1"
 
     private fun getInterceptor(vararg interceptors: Interceptor): OkHttpClient {
         val builder = OkHttpClient.Builder()
