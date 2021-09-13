@@ -75,4 +75,6 @@ dependencies {
     Dependencies.hilt.forEach(::implementation)
     Dependencies.lifecycle.forEach(::implementation)
     Dependencies.compiler.forEach(::kapt)
+    Dependencies.stomp.forEach(::implementation)
+    Dependencies.rx.forEach(::implementation)
 }

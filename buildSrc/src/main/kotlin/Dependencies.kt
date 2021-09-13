@@ -54,6 +54,15 @@ object Versions {
         const val Master = "2.2.0"
         const val Compose = "1.0.0-alpha07"
     }
+
+    object Stomp{
+        const val Master = "1.6.6"
+    }
+
+    object Rx{
+        const val Java = "2.2.5"
+        const val Android = "2.1.0"
+    }
 }
 
 object Dependencies {
@@ -107,5 +116,14 @@ object Dependencies {
         "androidx.lifecycle:lifecycle-extensions:${Versions.Lifecycle.Master}",
         "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.Lifecycle.Master}",
         "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Lifecycle.Compose}"
+    )
+
+    val stomp = listOf(
+        "com.github.NaikSoftware:StompProtocolAndroid:${Versions.Stomp.Master}"
+    )
+
+    val rx = listOf(
+        "io.reactivex.rxjava2:rxjava:${Versions.Rx.Java}",
+        "io.reactivex.rxjava2:rxandroid:${Versions.Rx.Android}"
     )
 }
