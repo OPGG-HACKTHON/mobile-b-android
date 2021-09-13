@@ -261,7 +261,7 @@ class ChatActivity : ComponentActivity() {
                     Surface(
                         modifier = Modifier.constrainAs(message) {
                             top.linkTo(name.bottom, 10.dp)
-                            end.linkTo(name.end)
+                            start.linkTo(name.start)
                         },
                         elevation = 1.dp,
                         contentColor = Color.White,
