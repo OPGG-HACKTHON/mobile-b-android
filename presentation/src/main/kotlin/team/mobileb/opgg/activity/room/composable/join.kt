@@ -1,5 +1,7 @@
 package team.mobileb.opgg.activity.room.composable
 
+import android.content.Context
+import android.content.Intent
 import android.view.Window
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -44,14 +46,18 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import team.mobileb.opgg.R
+import team.mobileb.opgg.activity.chat.ChatActivity
 import team.mobileb.opgg.activity.room.RoomViewModel
+import team.mobileb.opgg.domain.doWhen
 import team.mobileb.opgg.theme.Blue
 import team.mobileb.opgg.theme.Gray
 import team.mobileb.opgg.theme.LightGray
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
+import team.mobileb.opgg.util.config.IntentConfig
 import team.mobileb.opgg.util.extension.toast
 
 @Composable
@@ -82,12 +88,12 @@ private fun Header(modifier: Modifier) {
 
 @Composable
 private fun Content(modifier: Modifier) {
-    val vm: RoomViewModel = viewModel()
+    val roomVm: RoomViewModel = viewModel()
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
 
-    val positionsList = listOf("정글", "미드", "서폿", "원딜", "탑", null).chunked(2)
+    val positionsList = listOf("탑", "정글", "미드", "원딜", "서폿", null).chunked(2)
     val positionButtonShape = RoundedCornerShape(10.dp)
     val positionButtonHeight = 50.dp
     var selectedPosition by remember { mutableStateOf("") }
@@ -183,9 +189,44 @@ private fun Content(modifier: Modifier) {
             )
             Button(
                 onClick = {
-                    if (linkField.text.isNotBlank()) {
-                        coroutineScope.launch {
-                            // TODO
+                    val link = linkField.text
+                    if (link.isNotBlank()) {
+                        if (selectedPosition != "") {
+                            coroutineScope.launch {
+                                roomVm.checkRoom(link).collect { checkResult ->
+                                    checkResult.doWhen(
+                                        onSuccess = { check ->
+                                            if (check.code == 200) {
+                                                startChatActivity(
+                                                    context = context,
+                                                    inviteCode = link,
+                                                    positionType = positionsList.flatten()
+                                                        .indexOf(selectedPosition)
+                                                )
+                                            } else {
+                                                toast(
+                                                    context,
+                                                    context.getString(
+                                                        R.string.composable_room_toast_error,
+                                                        check.message
+                                                    )
+                                                )
+                                            }
+                                        },
+                                        onFail = {
+                                            toast(
+                                                context,
+                                                context.getString(R.string.composable_room_toast_confirm_code)
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        } else {
+                            toast(
+                                context,
+                                context.getString(R.string.composable_join_toast_confirm_position)
+                            )
                         }
                     } else {
                         toast(
@@ -206,4 +247,11 @@ private fun Content(modifier: Modifier) {
             }
         }
     }
+}
+
+private fun startChatActivity(context: Context, inviteCode: String, positionType: Int) {
+    context.startActivity(Intent(context, ChatActivity::class.java).apply {
+        putExtra(IntentConfig.ChatActivityInviteCode, inviteCode)
+        putExtra(IntentConfig.ChatActivityPositionType, positionType)
+    })
 }

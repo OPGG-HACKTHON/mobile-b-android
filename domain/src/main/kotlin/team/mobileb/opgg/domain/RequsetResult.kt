@@ -5,9 +5,9 @@ sealed class RequestResult<out T> {
     data class Fail(val exception: Exception) : RequestResult<Nothing>()
 }
 
-suspend fun <T> RequestResult<T>.doWhen(
-    onSuccess: suspend (T) -> Unit,
-    onFail: suspend (Exception) -> Unit,
+inline fun <T> RequestResult<T>.doWhen(
+    onSuccess: (T) -> Unit,
+    onFail: (Exception) -> Unit,
 ) {
     when (this) {
         is RequestResult.Success -> onSuccess(response)

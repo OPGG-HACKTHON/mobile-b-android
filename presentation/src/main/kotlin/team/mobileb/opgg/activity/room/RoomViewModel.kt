@@ -2,6 +2,7 @@ package team.mobileb.opgg.activity.room
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import team.mobileb.opgg.domain.model.CreateRoomData
 import team.mobileb.opgg.domain.usecase.CheckRoomUseCase
 import team.mobileb.opgg.domain.usecase.CreateRoomUseCase
 import team.mobileb.opgg.domain.usecase.RetrievePositionUseCase
@@ -17,7 +18,7 @@ class RoomViewModel @Inject constructor(
 ) : ViewModel() {
     suspend fun checkRoom(inviteCode: String) = checkRoomUseCase(inviteCode)
 
-    suspend fun createRoom(userKey: String) = createRoomUseCase(userKey)
+    suspend fun createRoom(createRoomData: CreateRoomData) = createRoomUseCase(createRoomData)
 
     suspend fun retrieveRoom(userKey: String) = retrieveRoomUseCase(userKey)
 

@@ -1,19 +1,19 @@
 package team.mobileb.opgg.data.datasource
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import team.mobileb.opgg.data.api.RoomsApi
 import team.mobileb.opgg.data.mapper.toDomain
 import team.mobileb.opgg.data.util.isValid
 import team.mobileb.opgg.domain.RequestResult
+import team.mobileb.opgg.domain.model.CreateRoomData
 import team.mobileb.opgg.domain.repository.RoomRepository
 
 class RoomRepositoryImpl(private val api: RoomsApi) : RoomRepository {
     @OptIn(ExperimentalCoroutinesApi::class)
-    override suspend fun createRoom(userKey: String) = callbackFlow {
+    override suspend fun createRoom(createRoomData: CreateRoomData) = callbackFlow {
         try {
-            val request = api.createRoom(userKey)
+            val request = api.createRoom(createRoomData)
             if (request.isValid()) {
                 trySend(RequestResult.Success(request.body()!!.toDomain()))
             } else {
@@ -23,7 +23,7 @@ class RoomRepositoryImpl(private val api: RoomsApi) : RoomRepository {
             trySend(RequestResult.Fail(exception))
         }
 
-        awaitClose { close() }
+        close()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -39,7 +39,7 @@ class RoomRepositoryImpl(private val api: RoomsApi) : RoomRepository {
             trySend(RequestResult.Fail(exception))
         }
 
-        awaitClose { close() }
+        close()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -55,6 +55,6 @@ class RoomRepositoryImpl(private val api: RoomsApi) : RoomRepository {
             trySend(RequestResult.Fail(exception))
         }
 
-        awaitClose { close() }
+        close()
     }
 }

@@ -30,7 +30,9 @@
             android:name=".activity.room.RoomActivity"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".activity.chat.ChatActivity" />
+        <activity
+            android:name=".activity.chat.ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 
