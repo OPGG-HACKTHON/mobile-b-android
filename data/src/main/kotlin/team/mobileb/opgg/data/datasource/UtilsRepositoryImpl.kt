@@ -1,7 +1,6 @@
 package team.mobileb.opgg.data.datasource
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import team.mobileb.opgg.data.api.UtilsApi
 import team.mobileb.opgg.data.mapper.toDomain
@@ -23,6 +22,6 @@ class UtilsRepositoryImpl(private val api: UtilsApi) : UtilsRepository {
             trySend(RequestResult.Fail(exception))
         }
 
-        awaitClose { close() }
+        close()
     }
 }

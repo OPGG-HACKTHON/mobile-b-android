@@ -44,9 +44,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import team.mobileb.opgg.R
 import team.mobileb.opgg.activity.room.RoomViewModel
+import team.mobileb.opgg.domain.doWhen
 import team.mobileb.opgg.theme.Blue
 import team.mobileb.opgg.theme.Gray
 import team.mobileb.opgg.theme.LightGray
@@ -87,7 +89,7 @@ private fun Content(modifier: Modifier) {
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
 
-    val positionsList = listOf("정글", "미드", "서폿", "원딜", "탑", null).chunked(2)
+    val positionsList = listOf("탑", "정글", "미드", "원딜", "서폿", null).chunked(2)
     val positionButtonShape = RoundedCornerShape(10.dp)
     val positionButtonHeight = 50.dp
     var selectedPosition by remember { mutableStateOf("") }
@@ -183,9 +185,23 @@ private fun Content(modifier: Modifier) {
             )
             Button(
                 onClick = {
-                    if (linkField.text.isNotBlank()) {
+                    val link = linkField.text
+                    if (link.isNotBlank()) {
                         coroutineScope.launch {
-                            // TODO
+                            vm.checkRoom(link).collect { checkResult ->
+                                checkResult.doWhen(
+                                    onSuccess = { check ->
+                                        if (check.code == 200) {
+                                            println("방 존재, $check")
+                                        } else {
+                                            println("방 없음, $check")
+                                        }
+                                    },
+                                    onFail = { exception ->
+                                        println("방 체크 실패: $exception")
+                                    }
+                                )
+                            }
                         }
                     } else {
                         toast(

@@ -55,11 +55,11 @@ object Versions {
         const val Compose = "1.0.0-alpha07"
     }
 
-    object Stomp{
+    object Stomp {
         const val Master = "1.6.6"
     }
 
-    object Rx{
+    object Rx {
         const val Java = "2.2.5"
         const val Android = "2.1.0"
     }

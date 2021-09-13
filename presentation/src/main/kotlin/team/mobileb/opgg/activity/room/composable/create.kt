@@ -43,14 +43,17 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
 import team.mobileb.opgg.activity.room.RoomViewModel
+import team.mobileb.opgg.domain.doWhen
+import team.mobileb.opgg.domain.model.CreateRoomData
 import team.mobileb.opgg.theme.LightGray
 import team.mobileb.opgg.theme.Pink
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
-import team.mobileb.opgg.util.extension.toast
 
 @Composable
 fun CreateRoom(window: Window) {
@@ -150,15 +153,19 @@ private fun Content(modifier: Modifier) {
             Button(
                 onClick = {
                     val link = linkField.text
-                    if (link.isNotBlank()) {
-                        coroutineScope.launch {
-                            // TODO
+                    coroutineScope.launch {
+                        vm.createRoom(
+                            CreateRoomData(userKey = GameWaitingService.DeviceId, inviteCode = link)
+                        ).collect { createResult ->
+                            createResult.doWhen(
+                                onSuccess = { roomInfo ->
+                                    println("방 생성 성공: $createResult")
+                                },
+                                onFail = { exception ->
+                                    println("방 생성 실패: $exception")
+                                }
+                            )
                         }
-                    } else {
-                        toast(
-                            context,
-                            context.getString(R.string.composable_room_toast_insert_link)
-                        )
                     }
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Pink),
