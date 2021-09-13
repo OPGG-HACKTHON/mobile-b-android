@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -124,11 +125,13 @@ class ChatActivity : ComponentActivity() {
         val messageFieldTopPadding = 15.dp
         var messageField by remember { mutableStateOf(TextFieldValue()) }
         val messages = remember { mutableStateListOf<ChatReceive>() }
+        val scrollState = rememberLazyListState()
 
         LaunchedEffect(Unit) {
             chatVm.connect(intent.getStringExtra(IntentConfig.ChatActivityInviteCode)!!)
                 .collect { message ->
                     messages.add(message.toModel())
+                    scrollState.scrollToItem(messages.size - 1)
                 }
         }
 
@@ -144,7 +147,8 @@ class ChatActivity : ComponentActivity() {
                         height = Dimension.fillToConstraints
                     },
                 contentPadding = PaddingValues(defaultPadding),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                state = scrollState
             ) {
                 itemsIndexed(items = messages) { index, message ->
                     ChatBubble(
