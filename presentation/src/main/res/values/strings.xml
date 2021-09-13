@@ -16,4 +16,6 @@
     <string name="composable_room_toast_insert_link">링크를 입력해 주세요.</string>
     <string name="composable_room_toast_error">오류가 발생했어요 😭\n\n%s</string>
     <string name="composable_room_toast_confirm_code">초대 코드가 올바르지 않아요.</string>
+    <string name="activity_chat_toast_input_message">메시지를 입력해 주세요.</string>
+    <string name="composable_join_toast_confirm_position">포지션을 선택해 주세요</string>
 </resources>

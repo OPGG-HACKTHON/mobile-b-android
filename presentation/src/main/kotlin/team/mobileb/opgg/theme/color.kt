@@ -16,7 +16,6 @@ val materialColorPalette = lightColors().copy(
 )
 
 object ChatColor {
-    val ProfileImageBackgroundColor = Color(0xFFc4c4c4)
     val OtherBubbleBackgroundColor = Color(0xFFedf1f4) // 상대 채팅버블 배경 색
     val OwnBubbleBackgroundColor = Blue // 내 채팅버블 배경 색
     val TextFieldBackgroundColor = Color(0xFFf8f8f8)

@@ -30,8 +30,12 @@ class ChatViewModel @Inject constructor(private val client: StompClient) : ViewM
         val headerList = mutableListOf<StompHeader>()
         headerList.add(StompHeader("inviteCode", chatItem.inviteCode)) // 방 생성시 입력한 inviteCode
         headerList.add(StompHeader("username", chatItem.userKey)) // 방 생성시 입력한 userKey
-        headerList.add(StompHeader("positionType",
-            (chatItem.positionType + 1).toString())) // 클라이언트 index 0 부터 시작, 서버 index 1 부터 시작
+        headerList.add(
+            StompHeader(
+                "positionType",
+                (chatItem.positionType + 1).toString()
+            )
+        ) // 클라이언트 index 0 부터 시작, 서버 index 1 부터 시작
         client.connect(headerList)
 
         // Server PositionType

@@ -58,10 +58,6 @@ android {
 
 dependencies {
     implementation(Dependencies.json)
-    implementation(Dependencies.landscapistcoil) {
-        exclude(group = "androidx.appcompat", module = "appcompat")
-        exclude(group = "androidx.appcompat", module = "appcompat-resources")
-    }
 
     implementation(project(":data"))
     implementation(project(":domain"))

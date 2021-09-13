@@ -25,7 +25,6 @@ object Versions {
     object Ui {
         const val ConstraintLayout = "1.0.0-beta01"
         const val Material = "1.4.0"
-        const val LandscapistCoil = "1.3.4"
     }
 
     object Util {
@@ -67,8 +66,6 @@ object Versions {
 
 object Dependencies {
     const val json = "com.google.code.gson:gson:${Versions.Gson}"
-    const val landscapistcoil =
-        "com.github.skydoves:landscapist-coil:${Versions.Ui.LandscapistCoil}"
 
     val debug = listOf(
         "com.squareup.leakcanary:leakcanary-android:${Versions.Debug.LeakCanary}"

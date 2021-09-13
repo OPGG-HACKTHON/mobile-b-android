@@ -96,14 +96,14 @@ private fun Content(modifier: Modifier) {
     val positionsList = listOf("탑", "정글", "미드", "원딜", "서폿", null).chunked(2)
     val positionButtonShape = RoundedCornerShape(10.dp)
     val positionButtonHeight = 50.dp
-    var selectedPosition by remember { mutableStateOf(0) }
+    var selectedPosition by remember { mutableStateOf("") }
 
     @Composable
-    fun positionButtonBackgroundColor(position: Int) =
+    fun positionButtonBackgroundColor(position: String) =
         animateColorAsState(if (selectedPosition == position) Blue else Gray).value
 
     @Composable
-    fun positionButtonTextColor(position: Int) =
+    fun positionButtonTextColor(position: String) =
         animateColorAsState(if (selectedPosition == position) Color.White else Color.Black).value
 
     var linkField by remember { mutableStateOf(TextFieldValue()) }
@@ -148,7 +148,7 @@ private fun Content(modifier: Modifier) {
             color = Color.Black,
             fontSize = 18.sp
         )
-        positionsList.forEachIndexed { index, positions ->
+        positionsList.forEach { positions ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(15.dp)
@@ -156,16 +156,16 @@ private fun Content(modifier: Modifier) {
                 positions.forEach { position ->
                     if (position != null) {
                         Button(
-                            onClick = { selectedPosition = index },
+                            onClick = { selectedPosition = position },
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = positionButtonBackgroundColor(index)
+                                backgroundColor = positionButtonBackgroundColor(position)
                             ),
                             modifier = Modifier
                                 .weight(1f)
                                 .height(positionButtonHeight),
                             shape = positionButtonShape
                         ) {
-                            Text(text = position, color = positionButtonTextColor(index))
+                            Text(text = position, color = positionButtonTextColor(position))
                         }
                     } else {
                         Spacer(
@@ -191,34 +191,42 @@ private fun Content(modifier: Modifier) {
                 onClick = {
                     val link = linkField.text
                     if (link.isNotBlank()) {
-                        coroutineScope.launch {
-                            roomVm.checkRoom(link).collect { checkResult ->
-                                checkResult.doWhen(
-                                    onSuccess = { check ->
-                                        if (check.code == 200) {
-                                            startChatActivity(
-                                                context = context,
-                                                inviteCode = link,
-                                                positionType = selectedPosition
-                                            )
-                                        } else {
+                        if (selectedPosition != "") {
+                            coroutineScope.launch {
+                                roomVm.checkRoom(link).collect { checkResult ->
+                                    checkResult.doWhen(
+                                        onSuccess = { check ->
+                                            if (check.code == 200) {
+                                                startChatActivity(
+                                                    context = context,
+                                                    inviteCode = link,
+                                                    positionType = positionsList.flatten()
+                                                        .indexOf(selectedPosition)
+                                                )
+                                            } else {
+                                                toast(
+                                                    context,
+                                                    context.getString(
+                                                        R.string.composable_room_toast_error,
+                                                        check.message
+                                                    )
+                                                )
+                                            }
+                                        },
+                                        onFail = {
                                             toast(
                                                 context,
                                                 context.getString(R.string.composable_room_toast_confirm_code)
                                             )
                                         }
-                                    },
-                                    onFail = { exception ->
-                                        toast(
-                                            context,
-                                            context.getString(
-                                                R.string.composable_room_toast_error,
-                                                exception.message
-                                            )
-                                        )
-                                    }
-                                )
+                                    )
+                                }
                             }
+                        } else {
+                            toast(
+                                context,
+                                context.getString(R.string.composable_join_toast_confirm_position)
+                            )
                         }
                     } else {
                         toast(
