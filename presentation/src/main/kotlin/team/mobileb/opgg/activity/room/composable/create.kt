@@ -1,5 +1,7 @@
 package team.mobileb.opgg.activity.room.composable
 
+import android.content.Context
+import android.content.Intent
 import android.view.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -29,14 +32,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +48,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
+import team.mobileb.opgg.activity.chat.ChatActivity
 import team.mobileb.opgg.activity.room.RoomViewModel
 import team.mobileb.opgg.domain.doWhen
 import team.mobileb.opgg.domain.model.CreateRoomData
@@ -54,6 +56,8 @@ import team.mobileb.opgg.theme.LightGray
 import team.mobileb.opgg.theme.Pink
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
+import team.mobileb.opgg.util.config.IntentConfig
+import team.mobileb.opgg.util.extension.toast
 
 @Composable
 fun CreateRoom(window: Window) {
@@ -84,10 +88,33 @@ private fun Header(modifier: Modifier) {
 @Composable
 private fun Content(modifier: Modifier) {
     val context = LocalContext.current
-    val vm: RoomViewModel = viewModel()
-    val focusManager = LocalFocusManager.current
+    val roomVm: RoomViewModel = viewModel()
     val coroutineScope = rememberCoroutineScope()
     var linkField by remember { mutableStateOf(TextFieldValue()) }
+
+    fun createRoom() {
+        val link = linkField.text
+        coroutineScope.launch {
+            roomVm.createRoom(
+                CreateRoomData(userKey = GameWaitingService.DeviceId, inviteCode = link)
+            ).collect { createResult ->
+                createResult.doWhen(
+                    onSuccess = {
+                        startChatActivity(context = context, inviteCode = link)
+                    },
+                    onFail = { exception ->
+                        toast(
+                            context,
+                            context.getString(
+                                R.string.composable_room_toast_error,
+                                exception.message
+                            )
+                        )
+                    }
+                )
+            }
+        }
+    }
 
     ConstraintLayout(
         modifier = modifier
@@ -127,11 +154,11 @@ private fun Content(modifier: Modifier) {
                 shape = RoundedCornerShape(15.dp),
                 modifier = Modifier
                     .padding(top = 10.dp)
-                    .fillMaxWidth()
-                    .focusRequester(FocusRequester()),
+                    .fillMaxWidth(),
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions {
-                    focusManager.clearFocus()
+                    createRoom()
                 }
             )
         }
@@ -152,21 +179,7 @@ private fun Content(modifier: Modifier) {
             )
             Button(
                 onClick = {
-                    val link = linkField.text
-                    coroutineScope.launch {
-                        vm.createRoom(
-                            CreateRoomData(userKey = GameWaitingService.DeviceId, inviteCode = link)
-                        ).collect { createResult ->
-                            createResult.doWhen(
-                                onSuccess = { roomInfo ->
-                                    println("방 생성 성공: $createResult")
-                                },
-                                onFail = { exception ->
-                                    println("방 생성 실패: $exception")
-                                }
-                            )
-                        }
-                    }
+                    createRoom()
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Pink),
                 shape = CircleShape,
@@ -180,4 +193,10 @@ private fun Content(modifier: Modifier) {
             }
         }
     }
+}
+
+private fun startChatActivity(context: Context, inviteCode: String) {
+    context.startActivity(Intent(context, ChatActivity::class.java).apply {
+        putExtra(IntentConfig.ChatActivityInviteCode, inviteCode)
+    })
 }

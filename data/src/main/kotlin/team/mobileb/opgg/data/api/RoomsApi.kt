@@ -12,7 +12,7 @@ import team.mobileb.opgg.domain.model.CreateRoomData
 
 interface RoomsApi {
     @Headers("Content-Type: application/json", "Host: localhost:8080")
-    @POST
+    @POST(".")
     suspend fun createRoom(@Body createRoomData: CreateRoomData): Response<RoomInfoResponse>
 
     @GET("{userKey}")

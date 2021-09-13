@@ -1,5 +1,7 @@
 package team.mobileb.opgg.activity.room.composable
 
+import android.content.Context
+import android.content.Intent
 import android.view.Window
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -47,6 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import team.mobileb.opgg.R
+import team.mobileb.opgg.activity.chat.ChatActivity
 import team.mobileb.opgg.activity.room.RoomViewModel
 import team.mobileb.opgg.domain.doWhen
 import team.mobileb.opgg.theme.Blue
@@ -54,6 +57,7 @@ import team.mobileb.opgg.theme.Gray
 import team.mobileb.opgg.theme.LightGray
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
+import team.mobileb.opgg.util.config.IntentConfig
 import team.mobileb.opgg.util.extension.toast
 
 @Composable
@@ -84,7 +88,7 @@ private fun Header(modifier: Modifier) {
 
 @Composable
 private fun Content(modifier: Modifier) {
-    val vm: RoomViewModel = viewModel()
+    val roomVm: RoomViewModel = viewModel()
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
@@ -92,14 +96,14 @@ private fun Content(modifier: Modifier) {
     val positionsList = listOf("탑", "정글", "미드", "원딜", "서폿", null).chunked(2)
     val positionButtonShape = RoundedCornerShape(10.dp)
     val positionButtonHeight = 50.dp
-    var selectedPosition by remember { mutableStateOf("") }
+    var selectedPosition by remember { mutableStateOf(0) }
 
     @Composable
-    fun positionButtonBackgroundColor(position: String) =
+    fun positionButtonBackgroundColor(position: Int) =
         animateColorAsState(if (selectedPosition == position) Blue else Gray).value
 
     @Composable
-    fun positionButtonTextColor(position: String) =
+    fun positionButtonTextColor(position: Int) =
         animateColorAsState(if (selectedPosition == position) Color.White else Color.Black).value
 
     var linkField by remember { mutableStateOf(TextFieldValue()) }
@@ -144,7 +148,7 @@ private fun Content(modifier: Modifier) {
             color = Color.Black,
             fontSize = 18.sp
         )
-        positionsList.forEach { positions ->
+        positionsList.forEachIndexed { index, positions ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(15.dp)
@@ -152,16 +156,16 @@ private fun Content(modifier: Modifier) {
                 positions.forEach { position ->
                     if (position != null) {
                         Button(
-                            onClick = { selectedPosition = position },
+                            onClick = { selectedPosition = index },
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = positionButtonBackgroundColor(position)
+                                backgroundColor = positionButtonBackgroundColor(index)
                             ),
                             modifier = Modifier
                                 .weight(1f)
                                 .height(positionButtonHeight),
                             shape = positionButtonShape
                         ) {
-                            Text(text = position, color = positionButtonTextColor(position))
+                            Text(text = position, color = positionButtonTextColor(index))
                         }
                     } else {
                         Spacer(
@@ -188,17 +192,30 @@ private fun Content(modifier: Modifier) {
                     val link = linkField.text
                     if (link.isNotBlank()) {
                         coroutineScope.launch {
-                            vm.checkRoom(link).collect { checkResult ->
+                            roomVm.checkRoom(link).collect { checkResult ->
                                 checkResult.doWhen(
                                     onSuccess = { check ->
                                         if (check.code == 200) {
-                                            println("방 존재, $check")
+                                            startChatActivity(
+                                                context = context,
+                                                inviteCode = link,
+                                                positionType = selectedPosition
+                                            )
                                         } else {
-                                            println("방 없음, $check")
+                                            toast(
+                                                context,
+                                                context.getString(R.string.composable_room_toast_confirm_code)
+                                            )
                                         }
                                     },
                                     onFail = { exception ->
-                                        println("방 체크 실패: $exception")
+                                        toast(
+                                            context,
+                                            context.getString(
+                                                R.string.composable_room_toast_error,
+                                                exception.message
+                                            )
+                                        )
                                     }
                                 )
                             }
@@ -222,4 +239,11 @@ private fun Content(modifier: Modifier) {
             }
         }
     }
+}
+
+private fun startChatActivity(context: Context, inviteCode: String, positionType: Int) {
+    context.startActivity(Intent(context, ChatActivity::class.java).apply {
+        putExtra(IntentConfig.ChatActivityInviteCode, inviteCode)
+        putExtra(IntentConfig.ChatActivityPositionType, positionType)
+    })
 }

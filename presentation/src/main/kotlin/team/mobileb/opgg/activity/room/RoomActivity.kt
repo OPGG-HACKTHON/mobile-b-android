@@ -14,7 +14,6 @@ import team.mobileb.opgg.util.config.IntentConfig
 
 @AndroidEntryPoint
 class RoomActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

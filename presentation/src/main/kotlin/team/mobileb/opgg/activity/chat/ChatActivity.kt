@@ -26,7 +26,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,17 +40,23 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
+import team.mobileb.opgg.activity.chat.model.ChatItem
 import team.mobileb.opgg.theme.Blue
 import team.mobileb.opgg.theme.ChatColor
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.Pink
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentTextFieldColors
-import team.mobileb.opgg.util.StringUtil
 import team.mobileb.opgg.util.config.IntentConfig
+import team.mobileb.opgg.util.extension.toast
 import kotlin.random.Random
 
+@AndroidEntryPoint
 class ChatActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +71,7 @@ class ChatActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         Toolbar(
-                            intent.getStringExtra(IntentConfig.ChatActivityRoomName) ?: "TestRoom"
+                            roomName = intent.getStringExtra(IntentConfig.ChatActivityInviteCode)!!
                         )
                     },
                     content = { Content() }
@@ -106,9 +114,18 @@ class ChatActivity : ComponentActivity() {
 
     @Composable
     private fun Content() {
+        val chatVm: ChatViewModel by viewModel()
         val defaultPadding = 16.dp
         val messageFieldTopPadding = 15.dp
         var messageField by remember { mutableStateOf(TextFieldValue()) }
+        val messageList = remember { mutableStateListOf<String>() }
+
+        LaunchedEffect(Unit) {
+            chatVm.connect(intent.getStringExtra(IntentConfig.ChatActivityInviteCode)!!)
+                .collect { message ->
+                    messageList.add(message)
+                }
+        }
 
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (lazyChats, fab, textField) = createRefs()
@@ -124,12 +141,8 @@ class ChatActivity : ComponentActivity() {
                 contentPadding = PaddingValues(defaultPadding),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                items(items = List(50) { StringUtil.getRandom(Random.nextInt(50)) }) { randomMessage ->
-                    if (Random.nextBoolean()) { // test case
-                        OwnBubble(message = randomMessage)
-                    } else {
-                        OtherBubble(message = randomMessage)
-                    }
+                items(items = messageList) { randomMessage ->
+                    OwnBubble(message = randomMessage)
                 }
             }
             FloatingActionButton(
@@ -161,7 +174,14 @@ class ChatActivity : ComponentActivity() {
                     Surface(
                         modifier = Modifier
                             .size(40.dp)
-                            .clickable { /* todo */ },
+                            .clickable {
+                                val message = messageField.text
+                                if (message.isNotBlank()) {
+                                    chatVm.sendChat(buildChatItem(message))
+                                } else {
+                                    toast("메시지를 입력해 주세요.")
+                                }
+                            },
                         color = Blue,
                         shape = CircleShape
                     ) {
@@ -246,4 +266,12 @@ class ChatActivity : ComponentActivity() {
             )
         }
     }
+
+    private fun buildChatItem(message: String) = ChatItem(
+        inviteCode = intent.getStringExtra(IntentConfig.ChatActivityInviteCode)!!,
+        userName = "User${Random.nextInt(10000)}",
+        positionType = intent.getIntExtra(IntentConfig.ChatActivityPositionType, 0),
+        userKey = GameWaitingService.DeviceId,
+        message = message
+    )
 }

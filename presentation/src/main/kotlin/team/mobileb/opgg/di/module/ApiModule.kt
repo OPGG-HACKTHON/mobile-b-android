@@ -3,7 +3,8 @@ package team.mobileb.opgg.di.module
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -11,13 +12,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import team.mobileb.opgg.data.api.RoomsApi
 import team.mobileb.opgg.data.api.UtilsApi
-import javax.inject.Singleton
 import kotlin.reflect.KClass
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object ApiModule {
-    private const val BaseUrl = "http://ec2-18-222-138-73.us-east-2.compute.amazonaws.com:3724/api/v1"
+    private const val BaseUrl =
+        "http://ec2-18-222-138-73.us-east-2.compute.amazonaws.com:3724/api/v1"
 
     private fun getInterceptor(vararg interceptors: Interceptor): OkHttpClient {
         val builder = OkHttpClient.Builder()
@@ -37,12 +38,12 @@ object ApiModule {
         .create(service.java)
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideRoomApi(loggingInterceptor: HttpLoggingInterceptor): RoomsApi =
         buildRetrofit(loggingInterceptor, "$BaseUrl/rooms/", RoomsApi::class)
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideUtilApi(loggingInterceptor: HttpLoggingInterceptor): UtilsApi =
         buildRetrofit(loggingInterceptor, "$BaseUrl/utils/", UtilsApi::class)
 }
