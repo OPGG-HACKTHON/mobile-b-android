@@ -9,7 +9,7 @@ val LightGray = Color(0xFFebebeb)
 val Gray = Color(0xFFcccccc)
 val HalfTransparentRed = Color(0x80FF0000)
 
-val materialColorPalette = lightColors().copy(
+val MaterialColorPalette = lightColors().copy(
     primary = Blue,
     primaryVariant = Color(0xFF0b51b2),
     secondary = Color(0xFF8facff)

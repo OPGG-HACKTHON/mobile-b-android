@@ -3,6 +3,7 @@ package team.mobileb.opgg.activity.chat
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,6 +43,7 @@ class ChatViewModel @Inject constructor(private val client: StompClient) : ViewM
         }
         client.connect(headerList)
     }
+
     fun sendMessage(chat: Chat) {
 
         // Server PositionType
