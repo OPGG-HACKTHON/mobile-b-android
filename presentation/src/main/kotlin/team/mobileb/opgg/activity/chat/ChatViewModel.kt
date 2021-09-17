@@ -1,5 +1,6 @@
 package team.mobileb.opgg.activity.chat
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +28,7 @@ class ChatViewModel @Inject constructor(private val client: StompClient) : ViewM
         awaitClose { topic.dispose() }
     }.shareIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed())
 
-    fun sendChat(chat: Chat) {
+    fun connectSocket(chat: Chat) {
         val headerList = mutableListOf<StompHeader>().apply {
             add(StompHeader("inviteCode", chat.inviteCode)) // 방 생성시 입력한 inviteCode
             add(StompHeader("username", chat.userKey)) // 방 생성시 입력한 userKey
@@ -36,6 +37,8 @@ class ChatViewModel @Inject constructor(private val client: StompClient) : ViewM
             add(StompHeader("uuid", GameWaitingService.DeviceId)) // 기기 아이디
         }
         client.connect(headerList)
+    }
+    fun sendMessage(chat: Chat) {
 
         // Server PositionType
         //    - 1 : 탑
