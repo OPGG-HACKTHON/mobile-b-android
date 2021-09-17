@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.shareIn
 import org.json.JSONObject
+import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.activity.chat.model.ChatItem
 import ua.naiksoftware.stomp.StompClient
 import ua.naiksoftware.stomp.dto.StompHeader
@@ -32,6 +33,7 @@ class ChatViewModel @Inject constructor(private val client: StompClient) : ViewM
             add(StompHeader("username", chatItem.userKey)) // 방 생성시 입력한 userKey
             // 클라이언트 index 0 부터 시작, 서버 index 1 부터 시작
             add(StompHeader("positionType", (chatItem.positionType + 1).toString()))
+            add(StompHeader("UUID", GameWaitingService.DeviceId)) // 기기 아이디
         }
         client.connect(headerList)
 
