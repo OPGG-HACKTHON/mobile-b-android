@@ -1,6 +1,8 @@
 package team.mobileb.opgg.activity.chat.map
 
+import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -64,6 +66,16 @@ class MapActivity : ComponentActivity() {
         var warnOffset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
         var wardOffset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
         var markingType by remember { mutableStateOf<MarkingType>(MarkingType.Warn) }
+        var isClicked by remember { mutableStateOf(false) }
+        val updateWardOffset = Offset(intent.getFloatExtra("wardOffsetX", 0.0f), intent.getFloatExtra("wardOffsetY", 0.0f))
+        val updateWarnOffset = Offset(intent.getFloatExtra("warnOffsetX", 0.0f), intent.getFloatExtra("warnOffsetY", 0.0f))
+
+        if(updateWardOffset != Offset(0.0f, 0.0f) && !isClicked){
+            wardOffset = updateWardOffset
+        }
+        if(updateWarnOffset != Offset(0.0f, 0.0f) && !isClicked){
+            warnOffset = updateWarnOffset
+        }
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -79,6 +91,7 @@ class MapActivity : ComponentActivity() {
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onPress = { offset ->
+                                    isClicked = true
                                     if (markingType == MarkingType.Warn) {
                                         warnOffset = offset
                                     } else {
@@ -138,15 +151,16 @@ class MapActivity : ComponentActivity() {
                     modifier = Modifier.padding(top = 30.dp),
                     onClick = {
                         if (warnOffset.isVisible()) {
-                            chatVm.sendMessage(
-                                chat = defaultChatItem.copy(message = "x :${wardOffset.x}, y:${wardOffset.y}, ${MarkingType.Warn.value}")
-                            )
+                            intent.putExtra("offsetX Warn", warnOffset.x)
+                            intent.putExtra("offsetY Warn", warnOffset.y)
+                            intent.putExtra("Warn", MarkingType.Warn.value)
                         }
                         if (wardOffset.isVisible()) {
-                            chatVm.sendMessage(
-                                chat = defaultChatItem.copy(message = "x :${wardOffset.x}, y:${wardOffset.y}, ${MarkingType.Ward.value}")
-                            )
+                            intent.putExtra("offsetX Ward", wardOffset.x)
+                            intent.putExtra("offsetY Ward", wardOffset.y)
+                            intent.putExtra("Ward", MarkingType.Ward.value)
                         }
+                        setResult(Activity.RESULT_OK, intent)
                         finish()
                         toast(getString(R.string.activity_map_toast_send_success))
                     },

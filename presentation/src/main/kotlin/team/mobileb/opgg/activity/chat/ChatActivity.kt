@@ -2,6 +2,7 @@ package team.mobileb.opgg.activity.chat
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -38,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -51,8 +53,10 @@ import kotlinx.coroutines.flow.collect
 import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
 import team.mobileb.opgg.activity.chat.map.MapActivity
+import team.mobileb.opgg.activity.chat.map.MarkingType
 import team.mobileb.opgg.activity.chat.model.ChatReceive
 import team.mobileb.opgg.activity.chat.util.provideChatItem
+import team.mobileb.opgg.activity.chat.util.provideMapItem
 import team.mobileb.opgg.theme.Blue
 import team.mobileb.opgg.theme.ChatColor
 import team.mobileb.opgg.theme.MaterialTheme
@@ -66,7 +70,7 @@ import team.mobileb.opgg.util.extension.toast
 
 @AndroidEntryPoint
 class ChatActivity : ComponentActivity() {
-
+    private val MAP_CODE = 20
     private val chatVm: ChatViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,6 +140,32 @@ class ChatActivity : ComponentActivity() {
             chatVm.connect(intent.getStringExtra(IntentConfig.ChatActivityInviteCode)!!)
                 .collect { message ->
                     messages.add(message.toModel())
+
+                    messages.forEach { message ->
+                        if (message.content.contains("Warn")) {
+                            val list = message.content.split(",")
+                            val x = list[0].split(":")[1].toFloat()
+                            val y = list[1].split(":")[1].toFloat()
+                            intent.putExtra("warnOffsetX", list[0].split(":")[1].toFloat())
+                            intent.putExtra("warnOffsetY", list[1].split(":")[1].toFloat())
+                            chatVm.warnOffset.value = Offset(x, y)
+                            Log.i("chatVM warn update", chatVm.warnOffset.value.toString())
+                            message.content = "지도에 위험 핑을 업데이트 했습니다"
+
+                        }
+                        if (message.content.contains("Ward")) {
+                            val list = message.content.split(",")
+                            val x = list[0].split(":")[1].toFloat()
+                            val y = list[1].split(":")[1].toFloat()
+                            intent.putExtra("warnOffsetX", list[0].split(":")[1].toFloat())
+                            intent.putExtra("warnOffsetY", list[1].split(":")[1].toFloat())
+                            chatVm.wardOffset.value = Offset(x, y)
+
+                            Log.i("chatVM ward update", chatVm.wardOffset.value.toString())
+                            message.content = "지도에 와드 핑을 업데이트 했습니다"
+                        }
+                    }
+
                     scrollState.scrollToItem(messages.size - 1)
                 }
         }
@@ -395,9 +425,48 @@ class ChatActivity : ComponentActivity() {
     }
 
     private fun startMapActivity(inviteCode: String, positionType: Int) {
-        startActivity(Intent(this, MapActivity::class.java).apply {
+        startActivityForResult(Intent(this, MapActivity::class.java).apply {
             putExtra(IntentConfig.ChatActivityInviteCode, inviteCode)
             putExtra(IntentConfig.ChatActivityPositionType, positionType)
-        })
+            putExtra("wardOffsetX", chatVm.wardOffset.value.x)
+            putExtra("wardOffsetY", chatVm.wardOffset.value.y)
+            putExtra("warnOffsetX", chatVm.warnOffset.value.x)
+            putExtra("warnOffsetY", chatVm.warnOffset.value.y)
+        }, MAP_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                MAP_CODE -> {
+
+                    if (data!!.getStringExtra("Ward") == "Ward") {
+                        chatVm.sendMessage(
+                            provideMapItem().copy(
+                                message = "x :${
+                                    data.getFloatExtra(
+                                        "offsetX Ward",
+                                        0.0f
+                                    )
+                                }, y:${data.getFloatExtra("offsetY Ward", 0.0f)}, Ward"
+                            )
+                        )
+                    }
+                    if (data!!.getStringExtra("Warn") == "Warn") {
+                        chatVm.sendMessage(
+                            provideMapItem().copy(
+                                message = "x :${
+                                    data.getFloatExtra(
+                                        "offsetX Warn",
+                                        0.0f
+                                    )
+                                }, y:${data.getFloatExtra("offsetY Warn", 0.0f)}, Warn"
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 }

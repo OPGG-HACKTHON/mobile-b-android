@@ -1,6 +1,8 @@
 package team.mobileb.opgg.activity.chat
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,12 +21,14 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(private val client: StompClient) : ViewModel() {
 
+    var wardOffset = mutableStateOf(Offset(0.0f, 0.0f))
+    var warnOffset = mutableStateOf(Offset(0.0f, 0.0f))
+
     @OptIn(ExperimentalCoroutinesApi::class)
     fun connect(inviteCode: String) = callbackFlow {
         val topic = client.topic("/topic/message/$inviteCode").subscribe { topicMessage ->
             trySend(topicMessage.payload)
         }
-
         awaitClose { topic.dispose() }
     }.shareIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed())
 
@@ -49,12 +53,12 @@ class ChatViewModel @Inject constructor(private val client: StompClient) : ViewM
 
         val data = JSONObject().apply {
             put("userKey", chat.userKey) // 방 생성시 입력한 userKey
-            put("positionType", (chat.positionType + 1).toString())
+            put("positionType", (chat.positionType + 1))
             put("content", chat.message) // 메시지
             put("messageType", chat.messageType)
             put("inviteCode", chat.inviteCode) // 방 생성시 입력한 inviteCode
         }
-
+        Log.i("chat data", data.toString())
         client.send("/stream/chat/send", data.toString()).subscribe()
     }
 }
