@@ -5,5 +5,5 @@ data class Chat(
     val positionType: Int,
     val userKey: String,
     val message: String = "",
-    val messageType: String = "CHAT",
+    val messageType: String = "",
 )

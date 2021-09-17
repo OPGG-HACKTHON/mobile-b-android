@@ -71,7 +71,7 @@ class ChatActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        chatVm.connectSocket(provideChatItem())
         SystemUiController(window).run {
             setStatusBarColor(Blue)
             setNavigationBarColor(Color.White)
@@ -200,7 +200,7 @@ class ChatActivity : ComponentActivity() {
                             .clickable {
                                 val message = messageField.text
                                 if (message.isNotBlank()) {
-                                    chatVm.sendChat(defaultChatItem.copy(message = message))
+                                    chatVm.sendMessage(defaultChatItem.copy(message = message))
                                     messageField = TextFieldValue()
                                 } else {
                                     toast(getString(R.string.activity_chat_toast_input_message))

@@ -35,7 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import team.mobileb.opgg.R
+import team.mobileb.opgg.activity.chat.ChatViewModel
 import team.mobileb.opgg.activity.chat.util.provideChatItem
+import team.mobileb.opgg.activity.chat.util.provideMapItem
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.util.extension.toast
@@ -57,8 +59,8 @@ class MapActivity : ComponentActivity() {
 
     @Composable
     private fun Content() {
-        val mapVm: MapViewModel = viewModel()
-        val defaultChatItem = provideChatItem()
+        val chatVm: ChatViewModel = viewModel()
+        val defaultChatItem = provideMapItem()
         var warnOffset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
         var wardOffset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
         var markingType by remember { mutableStateOf<MarkingType>(MarkingType.Warn) }
@@ -136,17 +138,13 @@ class MapActivity : ComponentActivity() {
                     modifier = Modifier.padding(top = 30.dp),
                     onClick = {
                         if (warnOffset.isVisible()) {
-                            mapVm.sendPin(
-                                chat = defaultChatItem,
-                                offset = warnOffset,
-                                type = MarkingType.Warn
+                            chatVm.sendMessage(
+                                chat = defaultChatItem.copy(message = "x :${wardOffset.x}, y:${wardOffset.y}, ${MarkingType.Warn.value}")
                             )
                         }
                         if (wardOffset.isVisible()) {
-                            mapVm.sendPin(
-                                chat = defaultChatItem,
-                                offset = wardOffset,
-                                type = MarkingType.Warn
+                            chatVm.sendMessage(
+                                chat = defaultChatItem.copy(message = "x :${wardOffset.x}, y:${wardOffset.y}, ${MarkingType.Ward.value}")
                             )
                         }
                         finish()
