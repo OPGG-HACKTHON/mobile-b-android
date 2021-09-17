@@ -2,7 +2,6 @@ package team.mobileb.opgg.activity.chat
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -10,9 +9,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -62,7 +61,6 @@ import kotlinx.coroutines.flow.collect
 import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
 import team.mobileb.opgg.activity.chat.map.MapActivity
-import team.mobileb.opgg.activity.chat.map.MarkingType
 import team.mobileb.opgg.activity.chat.model.ChatReceive
 import team.mobileb.opgg.activity.chat.util.provideChatItem
 import team.mobileb.opgg.activity.chat.util.provideMapItem
@@ -94,6 +92,8 @@ class ChatActivity : ComponentActivity() {
             .addChildEventListener(object : ChildEventListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     if (snapshot.getValue(String::class.java) == RtdbConfig.Notice) {
+                        FirebaseDatabase.getInstance().getReference(provideChatItem().inviteCode)
+                            .removeValue()
                         NotificationUtil.noticeGameStart(applicationContext)
                         gameStart = true
                     }
@@ -215,34 +215,27 @@ class ChatActivity : ComponentActivity() {
 
         LaunchedEffect(Unit) {
             chatVm.connect(intent.getStringExtra(IntentConfig.ChatActivityInviteCode)!!)
-                .collect { message ->
-                    messages.add(message.toModel())
-
-                    messages.forEach { message ->
-                        if (message.content.contains("Warn")) {
-                            val list = message.content.split(",")
-                            val x = list[0].split(":")[1].toFloat()
-                            val y = list[1].split(":")[1].toFloat()
-                            intent.putExtra("warnOffsetX", list[0].split(":")[1].toFloat())
-                            intent.putExtra("warnOffsetY", list[1].split(":")[1].toFloat())
-                            chatVm.warnOffset.value = Offset(x, y)
-                            Log.i("chatVM warn update", chatVm.warnOffset.value.toString())
-                            message.content = "지도에 위험 핑을 업데이트 했습니다"
-
-                        }
-                        if (message.content.contains("Ward")) {
-                            val list = message.content.split(",")
-                            val x = list[0].split(":")[1].toFloat()
-                            val y = list[1].split(":")[1].toFloat()
-                            intent.putExtra("warnOffsetX", list[0].split(":")[1].toFloat())
-                            intent.putExtra("warnOffsetY", list[1].split(":")[1].toFloat())
-                            chatVm.wardOffset.value = Offset(x, y)
-
-                            Log.i("chatVM ward update", chatVm.wardOffset.value.toString())
-                            message.content = "지도에 와드 핑을 업데이트 했습니다"
-                        }
+                .collect { _message ->
+                    val message: ChatReceive = _message.toModel()
+                    if (message.content.contains("Warn")) {
+                        val list = message.content.split(",")
+                        val x = list[0].split(":")[1].toFloat()
+                        val y = list[1].split(":")[1].toFloat()
+                        intent.putExtra("warnOffsetX", list[0].split(":")[1].toFloat())
+                        intent.putExtra("warnOffsetY", list[1].split(":")[1].toFloat())
+                        chatVm.warnOffset.value = Offset(x, y)
+                        message.content = "지도에 위험 핑을 업데이트 했습니다"
                     }
-
+                    if (message.content.contains("Ward")) {
+                        val list = message.content.split(",")
+                        val x = list[0].split(":")[1].toFloat()
+                        val y = list[1].split(":")[1].toFloat()
+                        intent.putExtra("warnOffsetX", list[0].split(":")[1].toFloat())
+                        intent.putExtra("warnOffsetY", list[1].split(":")[1].toFloat())
+                        chatVm.wardOffset.value = Offset(x, y)
+                        message.content = "지도에 와드 핑을 업데이트 했습니다"
+                    }
+                    messages.add(message)
                     scrollState.scrollToItem(messages.size - 1)
                 }
         }
@@ -370,7 +363,7 @@ class ChatActivity : ComponentActivity() {
                 val (profileImage, name, message, time) = createRefs()
 
                 if (visibleProfileImage) {
-                    Spacer(
+                    Box(
                         modifier = Modifier
                             .size(50.dp)
                             .background(
@@ -380,8 +373,16 @@ class ChatActivity : ComponentActivity() {
                             .clip(CircleShape)
                             .constrainAs(profileImage) {
                                 start.linkTo(parent.start)
-                            }
-                    )
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(item.getPositionIconRes()),
+                            contentDescription = null,
+                            modifier = Modifier.size(25.dp),
+                            tint = Color.Unspecified
+                        )
+                    }
                     Text(
                         text = item.positionName,
                         fontSize = 13.sp,
@@ -447,18 +448,26 @@ class ChatActivity : ComponentActivity() {
                 val (profileImage, name, message, time) = createRefs()
 
                 if (visibleProfileImage) {
-                    Spacer(
+                    Box(
                         modifier = Modifier
                             .size(50.dp)
+                            .clip(CircleShape)
                             .background(
                                 color = Color(ColorUtil.getColorForPosition(item.positionType)),
                                 shape = CircleShape
                             )
-                            .clip(CircleShape)
                             .constrainAs(profileImage) {
                                 end.linkTo(parent.end)
-                            }
-                    )
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(item.getPositionIconRes()),
+                            contentDescription = null,
+                            modifier = Modifier.size(25.dp),
+                            tint = Color.Unspecified
+                        )
+                    }
                     Text(
                         text = item.positionName,
                         fontSize = 13.sp,
@@ -534,7 +543,6 @@ class ChatActivity : ComponentActivity() {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
                 MAP_CODE -> {
-
                     if (data!!.getStringExtra("Ward") == "Ward") {
                         chatVm.sendMessage(
                             provideMapItem().copy(
@@ -547,7 +555,7 @@ class ChatActivity : ComponentActivity() {
                             )
                         )
                     }
-                    if (data!!.getStringExtra("Warn") == "Warn") {
+                    if (data.getStringExtra("Warn") == "Warn") {
                         chatVm.sendMessage(
                             provideMapItem().copy(
                                 message = "x :${

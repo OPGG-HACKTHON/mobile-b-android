@@ -244,7 +244,8 @@ private fun Content(modifier: Modifier) {
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_arrow_forward_24),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = Color.White
                 )
             }
         }

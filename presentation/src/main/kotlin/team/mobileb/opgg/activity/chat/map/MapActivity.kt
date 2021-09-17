@@ -2,7 +2,6 @@ package team.mobileb.opgg.activity.chat.map
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -34,11 +33,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import team.mobileb.opgg.R
-import team.mobileb.opgg.activity.chat.ChatViewModel
-import team.mobileb.opgg.activity.chat.util.provideMapItem
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.util.extension.toast
@@ -60,19 +56,23 @@ class MapActivity : ComponentActivity() {
 
     @Composable
     private fun Content() {
-        val chatVm: ChatViewModel = viewModel()
-        val defaultChatItem = provideMapItem()
         var warnOffset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
         var wardOffset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
         var markingType by remember { mutableStateOf<MarkingType>(MarkingType.Warn) }
         var isClicked by remember { mutableStateOf(false) }
-        val updateWardOffset = Offset(intent.getFloatExtra("wardOffsetX", 0.0f), intent.getFloatExtra("wardOffsetY", 0.0f))
-        val updateWarnOffset = Offset(intent.getFloatExtra("warnOffsetX", 0.0f), intent.getFloatExtra("warnOffsetY", 0.0f))
+        val updateWardOffset = Offset(
+            intent.getFloatExtra("wardOffsetX", 0.0f),
+            intent.getFloatExtra("wardOffsetY", 0.0f)
+        )
+        val updateWarnOffset = Offset(
+            intent.getFloatExtra("warnOffsetX", 0.0f),
+            intent.getFloatExtra("warnOffsetY", 0.0f)
+        )
 
-        if(updateWardOffset != Offset(0.0f, 0.0f) && !isClicked){
+        if (updateWardOffset != Offset(0.0f, 0.0f) && !isClicked) {
             wardOffset = updateWardOffset
         }
-        if(updateWarnOffset != Offset(0.0f, 0.0f) && !isClicked){
+        if (updateWarnOffset != Offset(0.0f, 0.0f) && !isClicked) {
             warnOffset = updateWarnOffset
         }
 
