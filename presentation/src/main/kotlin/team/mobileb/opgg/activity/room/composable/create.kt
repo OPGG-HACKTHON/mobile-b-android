@@ -49,6 +49,7 @@ import kotlinx.coroutines.launch
 import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
 import team.mobileb.opgg.activity.chat.ChatActivity
+import team.mobileb.opgg.activity.room.RoomError
 import team.mobileb.opgg.activity.room.RoomViewModel
 import team.mobileb.opgg.domain.doWhen
 import team.mobileb.opgg.domain.model.CreateRoomData
@@ -57,6 +58,7 @@ import team.mobileb.opgg.theme.Pink
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
 import team.mobileb.opgg.util.config.IntentConfig
+import team.mobileb.opgg.util.extension.toModel
 import team.mobileb.opgg.util.extension.toast
 
 @Composable
@@ -107,7 +109,7 @@ private fun Content(modifier: Modifier) {
                             context,
                             context.getString(
                                 R.string.composable_room_toast_error,
-                                exception.message
+                                exception.message!!.toModel<RoomError>().message
                             )
                         )
                     }

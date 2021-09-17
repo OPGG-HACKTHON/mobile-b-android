@@ -50,9 +50,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
-import team.mobileb.opgg.activity.chat.model.ChatItem
-import team.mobileb.opgg.activity.chat.model.ChatReceive
 import team.mobileb.opgg.activity.chat.map.MapActivity
+import team.mobileb.opgg.activity.chat.model.ChatReceive
+import team.mobileb.opgg.activity.chat.util.provideChatItem
 import team.mobileb.opgg.theme.Blue
 import team.mobileb.opgg.theme.ChatColor
 import team.mobileb.opgg.theme.MaterialTheme
@@ -127,6 +127,7 @@ class ChatActivity : ComponentActivity() {
     private fun Content() {
         val defaultPadding = 16.dp
         val messageFieldTopPadding = 15.dp
+        val defaultChatItem = provideChatItem()
         var messageField by remember { mutableStateOf(TextFieldValue()) }
         val messages = remember { mutableStateListOf<ChatReceive>() }
         val scrollState = rememberLazyListState()
@@ -167,7 +168,12 @@ class ChatActivity : ComponentActivity() {
                     end.linkTo(parent.end, defaultPadding)
                     bottom.linkTo(textField.top, messageFieldTopPadding)
                 },
-                onClick = { startActivity(Intent(applicationContext, MapActivity::class.java)) },
+                onClick = {
+                    startMapActivity(
+                        inviteCode = defaultChatItem.inviteCode,
+                        positionType = defaultChatItem.positionType
+                    )
+                },
                 backgroundColor = Pink
             ) {
                 Icon(
@@ -194,7 +200,7 @@ class ChatActivity : ComponentActivity() {
                             .clickable {
                                 val message = messageField.text
                                 if (message.isNotBlank()) {
-                                    chatVm.sendChat(buildChatItem(message))
+                                    chatVm.sendChat(defaultChatItem.copy(message = message))
                                     messageField = TextFieldValue()
                                 } else {
                                     toast(getString(R.string.activity_chat_toast_input_message))
@@ -214,13 +220,6 @@ class ChatActivity : ComponentActivity() {
             )
         }
     }
-
-    private fun buildChatItem(message: String) = ChatItem(
-        inviteCode = intent.getStringExtra(IntentConfig.ChatActivityInviteCode)!!,
-        positionType = intent.getIntExtra(IntentConfig.ChatActivityPositionType, 0),
-        userKey = GameWaitingService.DeviceId,
-        message = message
-    )
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
@@ -393,5 +392,12 @@ class ChatActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun startMapActivity(inviteCode: String, positionType: Int) {
+        startActivity(Intent(this, MapActivity::class.java).apply {
+            putExtra(IntentConfig.ChatActivityInviteCode, inviteCode)
+            putExtra(IntentConfig.ChatActivityPositionType, positionType)
+        })
     }
 }

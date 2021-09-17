@@ -7,8 +7,15 @@
     <string name="activity_main_button_room_create">방 만들기</string>
     <string name="activity_main_button_room_join">방 들어가기</string>
 
+    <string name="activity_chat_toast_input_message">메시지를 입력해 주세요.</string>
+
+    <string name="activity_map_toast_send_success">전송 완료!</string>
+    <string name="activity_map_button_warn">위험</string>
+    <string name="activity_map_button_ward">와드</string>
+
     <string name="composable_join_label">입장하기</string>
     <string name="composable_join_position">포지션</string>
+    <string name="composable_join_toast_confirm_position">포지션을 선택해 주세요</string>
 
     <string name="composable_create_label">생성하기</string>
 
@@ -16,6 +23,5 @@
     <string name="composable_room_toast_insert_link">링크를 입력해 주세요.</string>
     <string name="composable_room_toast_error">오류가 발생했어요 😭\n\n%s</string>
     <string name="composable_room_toast_confirm_code">초대 코드가 올바르지 않아요.</string>
-    <string name="activity_chat_toast_input_message">메시지를 입력해 주세요.</string>
-    <string name="composable_join_toast_confirm_position">포지션을 선택해 주세요</string>
+    <string name="activity_map_button_send">전송</string>
 </resources>

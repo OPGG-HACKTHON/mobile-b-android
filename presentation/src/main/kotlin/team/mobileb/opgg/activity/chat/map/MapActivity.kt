@@ -1,19 +1,20 @@
 package team.mobileb.opgg.activity.chat.map
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -22,28 +23,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
-import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
+import team.mobileb.opgg.activity.chat.util.provideChatItem
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.SystemUiController
+import team.mobileb.opgg.util.extension.toast
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MapActivity : ComponentActivity() {
-
-    private val mapVm: MapViewModel by viewModels()
-    private var isEnabledWarning = mutableStateOf(false)
-    private var isEnabledWard = mutableStateOf(false)
-    private var isWardClicked = mutableStateOf(false)
-    private var isWarnClicked = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,159 +50,133 @@ class MapActivity : ComponentActivity() {
         SystemUiController(window).setSystemBarsColor(Color.White)
         setContent {
             MaterialTheme {
-                Screen()
+                Content()
             }
         }
     }
 
     @Composable
-    fun Screen() {
-        var offsetX by remember { mutableStateOf(0f) }
-        var offsetY by remember { mutableStateOf(0f) }
+    private fun Content() {
+        val mapVm: MapViewModel = viewModel()
+        val defaultChatItem = provideChatItem()
+        var warnOffset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
+        var wardOffset by remember { mutableStateOf(Offset(x = 0f, y = 0f)) }
+        var markingType by remember { mutableStateOf<MarkingType>(MarkingType.Warn) }
 
-        Column() {
-            Box {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(modifier = Modifier.size(350.dp)) {
                 Image(
-                    painter = painterResource(id = R.drawable.map), contentDescription = null,
+                    painter = painterResource(R.drawable.map),
+                    contentDescription = null,
                     modifier = Modifier
-                        .size(350.dp, 350.dp)
-                        .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+                        .fillMaxSize()
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onPress = { offset ->
-                                    if (isEnabledWarning.value) {
-                                        mapVm.warnOffset.value = offset
-                                        isWarnClicked.value = true
+                                    if (markingType == MarkingType.Warn) {
+                                        warnOffset = offset
                                     } else {
-                                        mapVm.wardOffset.value = offset
-                                        isWardClicked.value = true
+                                        wardOffset = offset
                                     }
                                 }
                             )
                         }
                 )
-                if (isWarnClicked.value) {
-                    WarningIcon(offset = mapVm.warnOffset.value)
+                if (warnOffset.isVisible()) {
+                    MarkingIcon(type = MarkingType.Warn, offset = warnOffset)
                 }
-                if (isWardClicked.value) {
-                    WardIcon(offset = mapVm.wardOffset.value)
+                if (wardOffset.isVisible()) {
+                    MarkingIcon(type = MarkingType.Ward, offset = wardOffset)
                 }
             }
-            Share()
-            Buttons()
-        }
-    }
-
-    @Composable
-    fun WarningIcon(offset: Offset) {
-
-        Icon(
-            modifier = Modifier
-                .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
-                .size(20.dp),
-            painter = painterResource(id = R.drawable.ic_alert_circle),
-
-            contentDescription = null
-        )
-        Log.i("Warning", "${offset.x} , ${offset.y}")
-    }
-
-    @Composable
-    fun WardIcon(offset: Offset) {
-        Icon(
-            modifier = Modifier
-                .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
-                .size(20.dp),
-            painter = painterResource(id = R.drawable.ic_ward_pin),
-            contentDescription = null
-        )
-    }
-
-    @Composable
-    fun Share() {
-        // TODO 사용자 값 받기
-        var inviteCode = "test20"
-        var positionType = 1
-        var userKey = GameWaitingService.DeviceId
-        Row {
-            Text("톡방에 공유하기")
-            Icon(painter = painterResource(id = R.drawable.ic_round_send_24),
-                contentDescription = null,
-                modifier = Modifier.clickable {
-
-                    mapVm.sendWarningPin(
-                        userKey,
-                        inviteCode,
-                        positionType
-                    )
-                    mapVm.sendWardPin(userKey, inviteCode, positionType)
-                    finish()
-                })
-        }
-    }
-
-    @Composable
-    fun Buttons() {
-
-        Row() {
-            Button(onClick = { warnEnableCheck() }) {
-                Row() {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(onClick = { markingType = MarkingType.Warn }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_round_alert_25),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                        Text(
+                            modifier = Modifier.padding(start = 8.dp),
+                            text = stringResource(R.string.activity_map_button_warn),
+                            color = Color.White
+                        )
+                    }
+                    Button(onClick = { markingType = MarkingType.Ward }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_round_alert_25),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                        Text(
+                            modifier = Modifier.padding(start = 8.dp),
+                            text = stringResource(R.string.activity_map_button_ward),
+                            color = Color.White
+                        )
+                    }
+                }
+                Button(
+                    modifier = Modifier.padding(top = 30.dp),
+                    onClick = {
+                        if (warnOffset.isVisible()) {
+                            mapVm.sendPin(
+                                chat = defaultChatItem,
+                                offset = warnOffset,
+                                type = MarkingType.Warn
+                            )
+                        }
+                        if (wardOffset.isVisible()) {
+                            mapVm.sendPin(
+                                chat = defaultChatItem,
+                                offset = wardOffset,
+                                type = MarkingType.Warn
+                            )
+                        }
+                        finish()
+                        toast(getString(R.string.activity_map_toast_send_success))
+                    },
+                ) {
                     Icon(
-                        modifier = Modifier.padding(
-                            start = 18.dp,
-                            top = 12.dp,
-                            bottom = 12.dp,
-                            end = 18.dp
-                        ),
-                        painter = painterResource(id = R.drawable.ic_alert_circle),
-                        contentDescription = null
+                        painter = painterResource(R.drawable.ic_round_send_24),
+                        contentDescription = null,
+                        tint = Color.White
                     )
                     Text(
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            top = 12.dp,
-                            bottom = 12.dp,
-                            end = 18.dp
-                        ), text = "위험"
-                    )
-                }
-            }
-            Button(onClick = { wardEnableCheck() }) {
-                Row() {
-                    Icon(
-                        modifier = Modifier.padding(
-                            start = 18.dp,
-                            top = 12.dp,
-                            bottom = 12.dp,
-                            end = 18.dp
-                        ),
-                        painter = painterResource(id = R.drawable.ic_ward_pin),
-                        contentDescription = null
-                    )
-                    Text(
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            top = 12.dp,
-                            bottom = 12.dp,
-                            end = 18.dp
-                        ), text = "와드"
+                        modifier = Modifier.padding(start = 8.dp),
+                        text = stringResource(R.string.activity_map_button_send),
+                        color = Color.White
                     )
                 }
             }
         }
     }
 
-    private fun warnEnableCheck() {
-        if (isEnabledWard.value) {
-            isEnabledWard.value = false
-        }
-        isEnabledWarning.value = true
-    }
-
-    private fun wardEnableCheck() {
-        if (isEnabledWarning.value) {
-            isEnabledWarning.value = false
-        }
-        isEnabledWard.value = true
+    @Composable
+    private fun MarkingIcon(type: MarkingType, offset: Offset) {
+        Icon(
+            modifier = Modifier
+                .offset { IntOffset(x = offset.x.roundToInt(), y = offset.y.roundToInt()) }
+                .size(20.dp),
+            painter = painterResource(if (type == MarkingType.Warn) R.drawable.ic_round_alert_25 else R.drawable.ic_round_ward_20),
+            contentDescription = null,
+            tint = Color.White
+        )
     }
 }
