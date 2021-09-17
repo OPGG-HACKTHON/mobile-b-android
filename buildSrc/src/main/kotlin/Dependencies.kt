@@ -4,7 +4,7 @@ object Application {
     const val minSdk = 24
     const val targetSdk = 30
     const val compileSdk = 30
-    const val jvmTarget = "1.8"
+    const val jvmTarget = "11"
     const val versionCode = 1
     const val versionName = "opgg_mobile-b"
 
@@ -13,8 +13,10 @@ object Application {
 }
 
 object Versions {
+    const val Gson = "2.8.8"
+
     object Essential {
-        const val Kotlin = "1.5.10"
+        const val Kotlin = "1.5.21"
         const val CoreKtx = "1.6.0"
         const val Coroutines = "1.5.1"
         const val Gradle = "7.1.0-alpha05"
@@ -26,11 +28,7 @@ object Versions {
     }
 
     object Util {
-        const val CheckDependencyUpdates = "1.4.1"
-    }
-
-    object NetworkUtil {
-        const val Gson = "2.8.7"
+        const val CheckDependencyUpdates = "1.5.0"
     }
 
     object Network {
@@ -39,21 +37,36 @@ object Versions {
     }
 
     object Hilt {
-        // https://stackoverflow.com/questions/68492472/hilt-field-injection-throwing-property-not-initialized-error
-        const val Master = "2.37" // todo: 2.38
+        const val Master = "2.38.1"
     }
 
     object Compose {
-        const val Master = "1.0.0"
-        const val Activity = "1.3.0"
+        const val Master = "1.0.1"
+        const val Activity = "1.3.1"
     }
 
     object Debug {
         const val LeakCanary = "2.7"
     }
+
+    object Lifecycle {
+        const val Master = "2.2.0"
+        const val Compose = "1.0.0-alpha07"
+    }
+
+    object Stomp {
+        const val Master = "1.6.6"
+    }
+
+    object Rx {
+        const val Java = "2.2.5"
+        const val Android = "2.1.0"
+    }
 }
 
 object Dependencies {
+    const val json = "com.google.code.gson:gson:${Versions.Gson}"
+
     val debug = listOf(
         "com.squareup.leakcanary:leakcanary-android:${Versions.Debug.LeakCanary}"
     )
@@ -64,7 +77,6 @@ object Dependencies {
     )
 
     val networkutil = listOf(
-        "com.google.code.gson:gson:${Versions.NetworkUtil.Gson}",
         "com.squareup.okhttp3:logging-interceptor:${Versions.Network.OkHttp}",
         "com.squareup.retrofit2:converter-gson:${Versions.Network.Retrofit}",
     )
@@ -95,5 +107,20 @@ object Dependencies {
 
     val compiler = listOf(
         "com.google.dagger:hilt-android-compiler:${Versions.Hilt.Master}"
+    )
+
+    val lifecycle = listOf(
+        "androidx.lifecycle:lifecycle-extensions:${Versions.Lifecycle.Master}",
+        "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.Lifecycle.Master}",
+        "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.Lifecycle.Compose}"
+    )
+
+    val stomp = listOf(
+        "com.github.NaikSoftware:StompProtocolAndroid:${Versions.Stomp.Master}"
+    )
+
+    val rx = listOf(
+        "io.reactivex.rxjava2:rxjava:${Versions.Rx.Java}",
+        "io.reactivex.rxjava2:rxandroid:${Versions.Rx.Android}"
     )
 }

@@ -1,21 +1,15 @@
 package team.mobileb.opgg.theme
 
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-
-/*val colors = lightColors().copy(
-    primary = Color(0xFF6b1aa5),
-    primaryVariant = Color(0xFF380075),
-    secondary = Color(0xFF9e4dd7)
-)*/
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun MaterialTheme(content: @Composable () -> Unit) {
-    MaterialTheme(/*todo*/) {
-        content()
-    }
+    MaterialTheme(colors = materialColorPalette, content = { content() })
 }
 
 @Composable
@@ -28,4 +22,10 @@ fun transparentTextFieldColors(
     unfocusedIndicatorColor = Color.Transparent,
     backgroundColor = backgroundColor,
     textColor = textColor
+)
+
+@Composable
+fun transparentButtonElevation() = ButtonDefaults.elevation(
+    defaultElevation = 0.dp,
+    pressedElevation = 0.dp
 )

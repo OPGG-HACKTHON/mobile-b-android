@@ -57,12 +57,10 @@ android {
 }
 
 dependencies {
+    implementation(Dependencies.json)
+
     implementation(project(":data"))
     implementation(project(":domain"))
-    implementation("com.github.skydoves:landscapist-coil:1.2.8") {
-        exclude(group = "androidx.appcompat", module = "appcompat")
-        exclude(group = "androidx.appcompat", module = "appcompat-resources")
-    }
 
     Dependencies.debug.forEach(::debugImplementation)
     Dependencies.essential.forEach(::implementation)
@@ -71,5 +69,8 @@ dependencies {
     Dependencies.ui.forEach(::implementation)
     Dependencies.compose.forEach(::implementation)
     Dependencies.hilt.forEach(::implementation)
+    Dependencies.lifecycle.forEach(::implementation)
     Dependencies.compiler.forEach(::kapt)
+    Dependencies.stomp.forEach(::implementation)
+    Dependencies.rx.forEach(::implementation)
 }
