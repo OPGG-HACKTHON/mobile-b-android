@@ -1,4 +1,4 @@
-package team.mobileb.opgg.activity.map
+package team.mobileb.opgg.activity.chat.map
 
 import android.os.Bundle
 import android.util.Log
@@ -8,11 +8,20 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -20,13 +29,11 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import dagger.hilt.android.AndroidEntryPoint
 import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.SystemUiController
-import team.mobileb.opgg.util.config.IntentConfig
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -37,6 +44,7 @@ class MapActivity : ComponentActivity() {
     private var isEnabledWard = mutableStateOf(false)
     private var isWardClicked = mutableStateOf(false)
     private var isWarnClicked = mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -74,18 +82,16 @@ class MapActivity : ComponentActivity() {
                             )
                         }
                 )
-                if(isWarnClicked.value) {
+                if (isWarnClicked.value) {
                     WarningIcon(offset = mapVm.warnOffset.value)
                 }
-                if(isWardClicked.value) {
+                if (isWardClicked.value) {
                     WardIcon(offset = mapVm.wardOffset.value)
                 }
             }
             Share()
             Buttons()
         }
-
-
     }
 
     @Composable
@@ -125,13 +131,13 @@ class MapActivity : ComponentActivity() {
                 contentDescription = null,
                 modifier = Modifier.clickable {
 
-                        mapVm.sendWarningPin(
-                            userKey,
-                            inviteCode,
-                            positionType
-                        )
-                        mapVm.sendWardPin(userKey, inviteCode, positionType)
-                        finish()
+                    mapVm.sendWarningPin(
+                        userKey,
+                        inviteCode,
+                        positionType
+                    )
+                    mapVm.sendWardPin(userKey, inviteCode, positionType)
+                    finish()
                 })
         }
     }
@@ -143,25 +149,50 @@ class MapActivity : ComponentActivity() {
             Button(onClick = { warnEnableCheck() }) {
                 Row() {
                     Icon(
-                        modifier = Modifier.padding(start = 18.dp, top = 12.dp, bottom = 12.dp, end = 18.dp),
+                        modifier = Modifier.padding(
+                            start = 18.dp,
+                            top = 12.dp,
+                            bottom = 12.dp,
+                            end = 18.dp
+                        ),
                         painter = painterResource(id = R.drawable.ic_alert_circle),
                         contentDescription = null
                     )
-                    Text(modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 18.dp), text = "위험")
+                    Text(
+                        modifier = Modifier.padding(
+                            start = 16.dp,
+                            top = 12.dp,
+                            bottom = 12.dp,
+                            end = 18.dp
+                        ), text = "위험"
+                    )
                 }
             }
             Button(onClick = { wardEnableCheck() }) {
                 Row() {
                     Icon(
-                        modifier = Modifier.padding(start = 18.dp, top = 12.dp, bottom = 12.dp, end = 18.dp),
+                        modifier = Modifier.padding(
+                            start = 18.dp,
+                            top = 12.dp,
+                            bottom = 12.dp,
+                            end = 18.dp
+                        ),
                         painter = painterResource(id = R.drawable.ic_ward_pin),
                         contentDescription = null
                     )
-                    Text(modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 18.dp),text = "와드")
+                    Text(
+                        modifier = Modifier.padding(
+                            start = 16.dp,
+                            top = 12.dp,
+                            bottom = 12.dp,
+                            end = 18.dp
+                        ), text = "와드"
+                    )
                 }
             }
         }
     }
+
     private fun warnEnableCheck() {
         if (isEnabledWard.value) {
             isEnabledWard.value = false

@@ -24,18 +24,15 @@ class ChatViewModel @Inject constructor(private val client: StompClient) : ViewM
         }
 
         awaitClose { topic.dispose() }
-    }.shareIn(viewModelScope, SharingStarted.WhileSubscribed())
+    }.shareIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed())
 
     fun sendChat(chatItem: ChatItem) {
-        val headerList = mutableListOf<StompHeader>()
-        headerList.add(StompHeader("inviteCode", chatItem.inviteCode)) // 방 생성시 입력한 inviteCode
-        headerList.add(StompHeader("username", chatItem.userKey)) // 방 생성시 입력한 userKey
-        headerList.add(
-            StompHeader(
-                "positionType",
-                (chatItem.positionType + 1).toString()
-            )
-        ) // 클라이언트 index 0 부터 시작, 서버 index 1 부터 시작
+        val headerList = mutableListOf<StompHeader>().apply {
+            add(StompHeader("inviteCode", chatItem.inviteCode)) // 방 생성시 입력한 inviteCode
+            add(StompHeader("username", chatItem.userKey)) // 방 생성시 입력한 userKey
+            // 클라이언트 index 0 부터 시작, 서버 index 1 부터 시작
+            add(StompHeader("positionType", (chatItem.positionType + 1).toString()))
+        }
         client.connect(headerList)
 
         // Server PositionType
@@ -45,12 +42,13 @@ class ChatViewModel @Inject constructor(private val client: StompClient) : ViewM
         //    - 4 : 원딜
         //    - 5 : 서폿
 
-        val data = JSONObject()
-        data.put("userKey", chatItem.userKey) // 방 생성시 입력한 userKey
-        data.put("positionType", (chatItem.positionType + 1).toString())
-        data.put("content", chatItem.message) // 메시지
-        data.put("messageType", chatItem.messageType)
-        data.put("destRoomCode", chatItem.inviteCode) // 방 생성시 입력한 inviteCode
+        val data = JSONObject().apply {
+            put("userKey", chatItem.userKey) // 방 생성시 입력한 userKey
+            put("positionType", (chatItem.positionType + 1).toString())
+            put("content", chatItem.message) // 메시지
+            put("messageType", chatItem.messageType)
+            put("destRoomCode", chatItem.inviteCode) // 방 생성시 입력한 inviteCode
+        }
 
         client.send("/stream/chat/send", data.toString()).subscribe()
     }

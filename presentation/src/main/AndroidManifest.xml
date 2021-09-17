@@ -31,10 +31,11 @@
         <activity
             android:name=".activity.chat.ChatActivity"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
-            android:name=".activity.map.MapActivity"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:name="team.mobileb.opgg.activity.chat.map.MapActivity"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>
