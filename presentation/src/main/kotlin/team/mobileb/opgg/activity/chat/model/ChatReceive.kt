@@ -19,5 +19,5 @@ data class ChatReceive(
     val userKey: String = "",
 
     @field:SerializedName("content")
-    val content: String = ""
+    var content: String = ""
 )
