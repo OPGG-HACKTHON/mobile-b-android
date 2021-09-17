@@ -36,7 +36,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import team.mobileb.opgg.R
 import team.mobileb.opgg.activity.chat.ChatViewModel
-import team.mobileb.opgg.activity.chat.util.provideChatItem
 import team.mobileb.opgg.activity.chat.util.provideMapItem
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.SystemUiController
@@ -123,7 +122,7 @@ class MapActivity : ComponentActivity() {
                     }
                     Button(onClick = { markingType = MarkingType.Ward }) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_alert_25),
+                            painter = painterResource(R.drawable.ic_round_ward_20),
                             contentDescription = null,
                             tint = Color.White
                         )

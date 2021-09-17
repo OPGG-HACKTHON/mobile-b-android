@@ -3,6 +3,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
     id("name.remal.check-dependency-updates") version Versions.Util.CheckDependencyUpdates
 }
 
@@ -58,6 +59,9 @@ android {
 
 dependencies {
     implementation(Dependencies.json)
+    implementation(Dependencies.FirebaseDatabase)
+
+    implementation(platform(Dependencies.FirebaseBom))
 
     implementation(project(":data"))
     implementation(project(":domain"))

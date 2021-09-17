@@ -14,12 +14,14 @@ object Application {
 
 object Versions {
     const val Gson = "2.8.8"
+    const val FirebaseBom = "28.4.1"
 
     object Essential {
         const val Kotlin = "1.5.21"
         const val CoreKtx = "1.6.0"
         const val Coroutines = "1.5.1"
         const val Gradle = "7.1.0-alpha05"
+        const val GoogleService = "4.3.10"
     }
 
     object Ui {
@@ -66,6 +68,8 @@ object Versions {
 
 object Dependencies {
     const val json = "com.google.code.gson:gson:${Versions.Gson}"
+    const val FirebaseBom = "com.google.firebase:firebase-bom:${Versions.FirebaseBom}"
+    const val FirebaseDatabase = "com.google.firebase:firebase-database"
 
     val debug = listOf(
         "com.squareup.leakcanary:leakcanary-android:${Versions.Debug.LeakCanary}"
