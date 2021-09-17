@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import team.mobileb.opgg.GameWaitingService
@@ -58,6 +59,7 @@ import team.mobileb.opgg.theme.Pink
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentButtonElevation
 import team.mobileb.opgg.util.config.IntentConfig
+import team.mobileb.opgg.util.config.RtdbConfig
 import team.mobileb.opgg.util.extension.toModel
 import team.mobileb.opgg.util.extension.toast
 
@@ -102,6 +104,8 @@ private fun Content(modifier: Modifier) {
             ).collect { createResult ->
                 createResult.doWhen(
                     onSuccess = {
+                        FirebaseDatabase.getInstance().getReference(link).push()
+                            .setValue(RtdbConfig.CreateRoom)
                         startChatActivity(context = context, inviteCode = link)
                     },
                     onFail = { exception ->

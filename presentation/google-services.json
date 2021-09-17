@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "346283093649",
+    "project_id": "opgg-project-871c1",
+    "storage_bucket": "opgg-project-871c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346283093649:android:115f0b0e5c460fe6ce5930",
+        "android_client_info": {
+          "package_name": "team.mobileb.opgg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "346283093649-am8v0ad80io8dqqifb8vh4150l92lp1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPacU9csP9c6mtfgZXMB0_Bd-motRjAfI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "346283093649-am8v0ad80io8dqqifb8vh4150l92lp1p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

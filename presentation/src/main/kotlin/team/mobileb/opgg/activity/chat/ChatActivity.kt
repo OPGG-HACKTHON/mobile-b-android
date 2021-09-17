@@ -9,6 +9,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +23,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -36,16 +38,23 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import team.mobileb.opgg.GameWaitingService
@@ -55,12 +64,16 @@ import team.mobileb.opgg.activity.chat.model.ChatReceive
 import team.mobileb.opgg.activity.chat.util.provideChatItem
 import team.mobileb.opgg.theme.Blue
 import team.mobileb.opgg.theme.ChatColor
+import team.mobileb.opgg.theme.HalfTransparentRed
 import team.mobileb.opgg.theme.MaterialTheme
-import team.mobileb.opgg.theme.Pink
 import team.mobileb.opgg.theme.SystemUiController
 import team.mobileb.opgg.theme.transparentTextFieldColors
+import team.mobileb.opgg.ui.multifab.MultiFabItem
+import team.mobileb.opgg.ui.multifab.MultiFloatingActionButton
 import team.mobileb.opgg.util.ColorUtil
+import team.mobileb.opgg.util.NotificationUtil
 import team.mobileb.opgg.util.config.IntentConfig
+import team.mobileb.opgg.util.config.RtdbConfig
 import team.mobileb.opgg.util.extension.toModel
 import team.mobileb.opgg.util.extension.toast
 
@@ -68,26 +81,90 @@ import team.mobileb.opgg.util.extension.toast
 class ChatActivity : ComponentActivity() {
 
     private val chatVm: ChatViewModel by viewModels()
+    private var gameStart by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        FirebaseDatabase.getInstance().getReference(provideChatItem().inviteCode)
+            .addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    if (snapshot.getValue(String::class.java) == RtdbConfig.Notice) {
+                        NotificationUtil.noticeGameStart(applicationContext)
+                        gameStart = true
+                    }
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+                override fun onChildRemoved(snapshot: DataSnapshot) {}
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                override fun onCancelled(error: DatabaseError) {}
+            })
+
         chatVm.connectSocket(provideChatItem())
-        SystemUiController(window).run {
-            setStatusBarColor(Blue)
-            setNavigationBarColor(Color.White)
-        }
         setContent {
             MaterialTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    topBar = {
-                        Toolbar(
-                            roomName = intent.getStringExtra(IntentConfig.ChatActivityInviteCode)!!
-                        )
-                    },
-                    content = { Content() }
-                )
+                GameStartContentCover {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        topBar = {
+                            Toolbar(
+                                roomName = intent.getStringExtra(IntentConfig.ChatActivityInviteCode)!!
+                            )
+                        },
+                        content = {
+                            Content()
+                        }
+                    )
+                }
             }
+        }
+    }
+
+    @Composable
+    private fun GameStartContentCover(content: @Composable () -> Unit) {
+        if (gameStart) {
+            SystemUiController(window).setSystemBarsColor(HalfTransparentRed)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = HalfTransparentRed),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.notification_gamestart_title),
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp
+                )
+                Icon(
+                    painter = painterResource(R.drawable.ic_baseline_alarm_24),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .padding(vertical = 50.dp),
+                    tint = Color.White
+                )
+                Button(
+                    onClick = { gameStart = false },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+                    shape = RoundedCornerShape(15.dp),
+                    contentPadding = PaddingValues(horizontal = 30.dp, vertical = 15.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.notification_gamestart_content),
+                        color = Color.Black,
+                        fontSize = 20.sp
+                    )
+                }
+            }
+        } else {
+            SystemUiController(window).run {
+                setStatusBarColor(Blue)
+                setNavigationBarColor(Color.White)
+            }
+            content()
         }
     }
 
@@ -163,25 +240,42 @@ class ChatActivity : ComponentActivity() {
                     )
                 }
             }
-            FloatingActionButton(
+            MultiFloatingActionButton(
                 modifier = Modifier.constrainAs(fab) {
                     end.linkTo(parent.end, defaultPadding)
                     bottom.linkTo(textField.top, messageFieldTopPadding)
                 },
-                onClick = {
-                    startMapActivity(
-                        inviteCode = defaultChatItem.inviteCode,
-                        positionType = defaultChatItem.positionType
+                fabIcon = painterResource(R.drawable.ic_round_add_24),
+                fabIconRotate = true,
+                items = listOf(
+                    MultiFabItem(
+                        id = 0,
+                        label = "지도",
+                        icon = painterResource(R.drawable.ic_round_map_24)
+                    ),
+                    MultiFabItem(
+                        id = 1,
+                        label = "게임 시작",
+                        icon = painterResource(R.drawable.ic_round_alert_25)
                     )
-                },
-                backgroundColor = Pink
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_round_add_24),
-                    contentDescription = null,
-                    tint = Color.White
-                )
-            }
+                ),
+                onFabItemClicked = { item ->
+                    when (item.id) {
+                        0 -> { // 지도
+                            startMapActivity(
+                                defaultChatItem.inviteCode,
+                                defaultChatItem.positionType
+                            )
+                        }
+                        1 -> { // 게임 시작
+                            FirebaseDatabase.getInstance()
+                                .getReference(defaultChatItem.inviteCode)
+                                .push()
+                                .setValue(RtdbConfig.Notice)
+                        }
+                    }
+                }
+            )
             TextField(
                 modifier = Modifier.constrainAs(textField) {
                     start.linkTo(parent.start, defaultPadding)

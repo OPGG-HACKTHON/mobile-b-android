@@ -30,7 +30,8 @@ fun CreateHeaderContent() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight(),
+            .wrapContentHeight()
+            .clip(RoundedCornerShape(15.dp)),
         horizontalAlignment = Alignment.End
     ) {
         Row(
