@@ -1,5 +1,6 @@
 package team.mobileb.opgg.activity.chat
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,12 +22,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,11 +46,8 @@ import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
 import team.mobileb.opgg.activity.chat.model.ChatItem
 import team.mobileb.opgg.activity.chat.model.ChatReceive
-import team.mobileb.opgg.theme.Blue
-import team.mobileb.opgg.theme.ChatColor
-import team.mobileb.opgg.theme.MaterialTheme
-import team.mobileb.opgg.theme.SystemUiController
-import team.mobileb.opgg.theme.transparentTextFieldColors
+import team.mobileb.opgg.activity.map.MapActivity
+import team.mobileb.opgg.theme.*
 import team.mobileb.opgg.util.ColorUtil
 import team.mobileb.opgg.util.config.IntentConfig
 import team.mobileb.opgg.util.extension.toModel
@@ -136,7 +129,7 @@ class ChatActivity : ComponentActivity() {
         }
 
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-            val (lazyChats, /*fab,*/ textField) = createRefs()
+            val (lazyChats, fab, textField) = createRefs()
 
             LazyColumn(
                 modifier = Modifier
@@ -158,12 +151,12 @@ class ChatActivity : ComponentActivity() {
                     )
                 }
             }
-            /*FloatingActionButton(
+            FloatingActionButton(
                 modifier = Modifier.constrainAs(fab) {
                     end.linkTo(parent.end, defaultPadding)
                     bottom.linkTo(textField.top, messageFieldTopPadding)
                 },
-                onClick = { *//*TODO*//* },
+                onClick = { startActivity(Intent(applicationContext, MapActivity::class.java)) },
                 backgroundColor = Pink
             ) {
                 Icon(
@@ -171,7 +164,7 @@ class ChatActivity : ComponentActivity() {
                     contentDescription = null,
                     tint = Color.White
                 )
-            }*/
+            }
             TextField(
                 modifier = Modifier.constrainAs(textField) {
                     start.linkTo(parent.start, defaultPadding)

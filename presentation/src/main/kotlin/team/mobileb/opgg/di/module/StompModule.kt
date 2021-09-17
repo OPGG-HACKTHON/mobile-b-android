@@ -12,7 +12,7 @@ import ua.naiksoftware.stomp.StompClient
 @InstallIn(ViewModelComponent::class)
 object StompModule {
     private const val BaseUrl =
-        "ws://ec2-18-222-138-73.us-east-2.compute.amazonaws.com:3724/socket/websocket"
+        "ws://gdok.site:3724/socket/websocket"
 
     @Provides
     @ViewModelScoped

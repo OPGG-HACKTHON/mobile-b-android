@@ -26,6 +26,7 @@ import team.mobileb.opgg.GameWaitingService
 import team.mobileb.opgg.R
 import team.mobileb.opgg.theme.MaterialTheme
 import team.mobileb.opgg.theme.SystemUiController
+import team.mobileb.opgg.util.config.IntentConfig
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -33,6 +34,9 @@ class MapActivity : ComponentActivity() {
 
     private val mapVm: MapViewModel by viewModels()
     private var isEnabledWarning = mutableStateOf(false)
+    private var isEnabledWard = mutableStateOf(false)
+    private var isWardClicked = mutableStateOf(false)
+    private var isWarnClicked = mutableStateOf(false)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,11 +52,7 @@ class MapActivity : ComponentActivity() {
     fun Screen() {
         var offsetX by remember { mutableStateOf(0f) }
         var offsetY by remember { mutableStateOf(0f) }
-        var inviteCode = "test0912"
-        //intent.getStringExtra(IntentConfig.ChatActivityInviteCode)!!
-        var positionType = 1
-        //intent.getIntExtra(IntentConfig.ChatActivityPositionType, 0)
-        var userKey = GameWaitingService.DeviceId
+
         Column() {
             Box {
                 Image(
@@ -63,22 +63,23 @@ class MapActivity : ComponentActivity() {
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onPress = { offset ->
-                                    mapVm.offset.value = offset
-                                    if (inviteCode != null) {
-                                        mapVm.sendWarningPin(
-                                            userKey,
-                                            inviteCode,
-                                            positionType
-                                        )
+                                    if (isEnabledWarning.value) {
+                                        mapVm.warnOffset.value = offset
+                                        isWarnClicked.value = true
+                                    } else {
+                                        mapVm.wardOffset.value = offset
+                                        isWardClicked.value = true
                                     }
                                 }
                             )
                         }
                 )
-                if(isEnabledWarning.value) {
-                    WarningIcon(mapVm.offset.value)
+                if(isWarnClicked.value) {
+                    WarningIcon(offset = mapVm.warnOffset.value)
                 }
-
+                if(isWardClicked.value) {
+                    WardIcon(offset = mapVm.wardOffset.value)
+                }
             }
             Share()
             Buttons()
@@ -91,43 +92,87 @@ class MapActivity : ComponentActivity() {
     fun WarningIcon(offset: Offset) {
 
         Icon(
-            modifier = Modifier.offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }.size(30.dp),
-            painter = painterResource(id = R.drawable.warning_pin),
+            modifier = Modifier
+                .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
+                .size(20.dp),
+            painter = painterResource(id = R.drawable.ic_alert_circle),
+
             contentDescription = null
         )
         Log.i("Warning", "${offset.x} , ${offset.y}")
     }
 
     @Composable
+    fun WardIcon(offset: Offset) {
+        Icon(
+            modifier = Modifier
+                .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
+                .size(20.dp),
+            painter = painterResource(id = R.drawable.ic_ward_pin),
+            contentDescription = null
+        )
+    }
+
+    @Composable
     fun Share() {
+        // TODO 사용자 값 받기
+        var inviteCode = "test20"
+        var positionType = 1
+        var userKey = GameWaitingService.DeviceId
         Row {
             Text("톡방에 공유하기")
             Icon(painter = painterResource(id = R.drawable.ic_round_send_24),
                 contentDescription = null,
                 modifier = Modifier.clickable {
-                    // TODO share
+
+                        mapVm.sendWarningPin(
+                            userKey,
+                            inviteCode,
+                            positionType
+                        )
+                        mapVm.sendWardPin(userKey, inviteCode, positionType)
+                        finish()
                 })
         }
     }
 
     @Composable
     fun Buttons() {
-        Button(onClick = { isEnabledWarning.value = true }) {
-            ConstraintLayout() {
-                val (icon, text) = createRefs()
+
+        Row() {
+            Button(onClick = { warnEnableCheck() }) {
                 Row() {
                     Icon(
-                        modifier = Modifier.padding(end = 16.dp),
+                        modifier = Modifier.padding(start = 18.dp, top = 12.dp, bottom = 12.dp, end = 18.dp),
                         painter = painterResource(id = R.drawable.ic_alert_circle),
                         contentDescription = null
                     )
-                    Text(text = "위험")
+                    Text(modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 18.dp), text = "위험")
                 }
-
             }
-
-
+            Button(onClick = { wardEnableCheck() }) {
+                Row() {
+                    Icon(
+                        modifier = Modifier.padding(start = 18.dp, top = 12.dp, bottom = 12.dp, end = 18.dp),
+                        painter = painterResource(id = R.drawable.ic_ward_pin),
+                        contentDescription = null
+                    )
+                    Text(modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 18.dp),text = "와드")
+                }
+            }
         }
     }
+    private fun warnEnableCheck() {
+        if (isEnabledWard.value) {
+            isEnabledWard.value = false
+        }
+        isEnabledWarning.value = true
+    }
 
+    private fun wardEnableCheck() {
+        if (isEnabledWarning.value) {
+            isEnabledWarning.value = false
+        }
+        isEnabledWard.value = true
+    }
 }
