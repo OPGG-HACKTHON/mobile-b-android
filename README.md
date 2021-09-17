@@ -1,6 +1,4 @@
-# GameWaitingService
-
-게임 플레이시 흡연하느라 늦는걸 방지하는 알리미 앱
+![image](https://user-images.githubusercontent.com/40740128/133790142-a7031e9d-078e-46b1-bfc7-dfc05d86f64a.png)
 
 -----
 
