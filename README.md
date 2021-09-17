@@ -1,5 +1,7 @@
 ![image](https://user-images.githubusercontent.com/40740128/133790142-a7031e9d-078e-46b1-bfc7-dfc05d86f64a.png)
 
+<h1 align="center">갔다올게: 게임 시작 알리미</h>
+
 -----
 
 ## 개발 규칙
