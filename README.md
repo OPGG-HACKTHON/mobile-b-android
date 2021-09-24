@@ -21,3 +21,6 @@
 - Retrofit/OkHttp for networking
 - Repository + MVVM for Design Pattern
 - Clean-architecture
+
+## 시연 영상
+[youtube.com](https://youtu.be/m5lyW6UWv0Q)
