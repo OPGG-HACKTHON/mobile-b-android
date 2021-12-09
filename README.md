@@ -16,7 +16,7 @@
 ## 개발 스킬
 
 - Jetpack Compose for UI
-- Dagger-Hilt for DI
+- Dagger2-Hilt for DI
 - Coroutines/Flow for asynchronous
 - Retrofit/OkHttp for networking
 - Repository + MVVM for Design Pattern
