@@ -2,8 +2,8 @@ import org.gradle.api.JavaVersion
 
 object Application {
     const val minSdk = 24
-    const val targetSdk = 30
-    const val compileSdk = 30
+    const val targetSdk = 31
+    const val compileSdk = 31
     const val jvmTarget = "11"
     const val versionCode = 1
     const val versionName = "opgg_mobile-b"
@@ -20,7 +20,7 @@ object Versions {
         const val Kotlin = "1.5.21"
         const val CoreKtx = "1.6.0"
         const val Coroutines = "1.5.1"
-        const val Gradle = "7.1.0-alpha05"
+        const val Gradle = "7.1.0-rc01"
         const val GoogleService = "4.3.10"
     }
 
